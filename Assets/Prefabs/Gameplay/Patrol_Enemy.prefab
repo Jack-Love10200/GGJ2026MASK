@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6024395409337398942
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3258229295358930410}
+  m_Layer: 0
+  m_Name: FaceSocket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3258229295358930410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6024395409337398942}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.087, y: 1.086, z: 0}
+  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 601066635421145664}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6681247147438616957
 GameObject:
   m_ObjectHideFlags: 0
@@ -26,10 +57,11 @@ Transform:
   m_GameObject: {fileID: 6681247147438616957}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.14, z: 0}
+  m_LocalPosition: {x: 0, y: 1.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3258229295358930410}
   m_Father: {fileID: 2348308230736586416}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &201114372834654473
@@ -103,6 +135,7 @@ GameObject:
   - component: {fileID: 3114634959756695325}
   - component: {fileID: 8908153792761347279}
   - component: {fileID: 3958707385712163288}
+  - component: {fileID: 697999867404480878}
   m_Layer: 0
   m_Name: Patrol_Enemy
   m_TagString: Untagged
@@ -182,3 +215,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BillboardY
   targetCamera: {fileID: 0}
+--- !u!114 &697999867404480878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7958760429828361537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625b6bdc70bfbac4885aee2f0e6f89cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMaskStackVisual
+  faceSocket: {fileID: 3258229295358930410}
+  bodyRenderer: {fileID: 201114372834654473}
+  initialMasksBottomToTop:
+  - {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
+  - {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
+  baseSortingOrder: 5
+  sortingLayerName: 
+  positionJitter: {x: 0.03, y: 0.03}
+  rotationJitterDeg: 2
+  scaleJitter: 0.03
+  perLayerZOffset: 0
+  deterministicJitter: 1
+  seedOverride: 0
