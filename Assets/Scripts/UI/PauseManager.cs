@@ -10,16 +10,10 @@ public class PauseManager : MonoBehaviour
     public GameObject pauseMenuPrefab;
     public float canvasPlaneDistance = 1f;
 
-    [Header("Post-Processing")]
-    public Volume crtVolume;
-    public float transitionDuration = 0.5f;
-
     private GameObject currentPauseMenu = null;
     private float recordedTimeScale = 1f;
     private bool canPause = true;
     private bool isPaused = false;
-
-    private Coroutine fadeCoroutine;
 
     private void OnEnable()
     {
@@ -65,10 +59,6 @@ public class PauseManager : MonoBehaviour
         Canvas canvas = currentPauseMenu.GetComponent<Canvas>();
         canvas.worldCamera = Camera.main;
         canvas.planeDistance = canvasPlaneDistance;
-
-        if (fadeCoroutine != null)
-            StopCoroutine(fadeCoroutine);
-        fadeCoroutine = StartCoroutine(AnimateVolumeWeight(1f));
     }
 
     public void Unpause()
@@ -81,27 +71,9 @@ public class PauseManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        Destroy(currentPauseMenu);
-
-        if (fadeCoroutine != null)
-            StopCoroutine(fadeCoroutine);
-        fadeCoroutine = StartCoroutine(AnimateVolumeWeight(0f));
-    }
-
-    private IEnumerator AnimateVolumeWeight(float targetWeight)
-    {
-        float startWeight = crtVolume.weight;
-        float elapsed = 0f;
-
-        while (elapsed < transitionDuration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            crtVolume.weight = Mathf.Lerp(startWeight, targetWeight, elapsed / transitionDuration);
-
-            yield return null;
-        }
-
-        crtVolume.weight = targetWeight;
+        //Play close animation
+        currentPauseMenu.GetComponent<Animator>().SetTrigger("Close");
+        currentPauseMenu.GetComponent<PauseMenu>().DestroySubmenus();
     }
 
     public void SetCanPause(bool value)
