@@ -13,10 +13,6 @@ public enum GameState
 
 public class GameStateManager : MonoBehaviour
 {
-
-    // public //////////////////////////////
-    public static GameStateManager Instance;
-
     // private /////////////////////////////
     public GameState currentState = GameState.Playing;
 
@@ -24,7 +20,6 @@ public class GameStateManager : MonoBehaviour
     void Start()
     {
         currentState = GameState.Playing;
-        Instance = this;
     }
 
     // Update is called once per frame

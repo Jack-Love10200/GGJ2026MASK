@@ -10,10 +10,12 @@ public class GameTimer : MonoBehaviour
 
     // private ///////////////////////////////
     private double currentTime = 0.0; // is set to the start time at the beginning of the game. decreases as time passes.
+    private GameStateManager gsm;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void TimerStart()
     {
+        gsm = PersistentScopeManagers.Instance.GetComponent<GameStateManager>();
         currentTime = startTime;
     }
 
@@ -31,7 +33,7 @@ public class GameTimer : MonoBehaviour
     void Update()
     {
         // only lower the timer if the game is running
-        if (GameStateManager.Instance.currentState != GameState.Playing)
+        if (gsm.currentState != GameState.Playing)
             return;
 
         currentTime -= Time.deltaTime;
@@ -42,7 +44,7 @@ public class GameTimer : MonoBehaviour
             GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
             Instantiate(loseScreenPrefab, canvas.transform);
             currentTime = 0.0;
-            GameStateManager.Instance.currentState = GameState.GameOver;
+            gsm.currentState = GameState.GameOver;
         }
 
         if (debugText)
