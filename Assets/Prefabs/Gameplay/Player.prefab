@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6489546323369670989}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19651522, y: -0.5918939, z: 0.15158994, w: 0.7668533}
-  m_LocalPosition: {x: 7.105692, y: 3.3935149, z: -1.3096237}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -151,6 +151,7 @@ GameObject:
   - component: {fileID: 7018370902648745511}
   - component: {fileID: 4919053225491481938}
   - component: {fileID: 8864451937882875011}
+  - component: {fileID: 4230451550983369188}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -167,7 +168,7 @@ Transform:
   m_GameObject: {fileID: 7694599089582009962}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.01837, y: -0.40782, z: -7.61773}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -264,7 +265,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e682022c359a5d43b19134c292ba4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  playerCamera: {fileID: 0}
+  Speed: 6
+  TurnTime: 1
 --- !u!114 &8864451937882875011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,8 +364,51 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 839108a2-348b-4dbd-823e-98f3ac39d24b
     m_ActionName: Player/MoveRight
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4919053225491481938}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnMoveForward
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ce3eb45e-684a-44d0-91e9-0dd9092ab4d1
+    m_ActionName: 'Player/MoveForward[/Keyboard/w]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!54 &4230451550983369188
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7694599089582009962}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
