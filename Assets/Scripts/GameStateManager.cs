@@ -33,7 +33,7 @@ public class GameStateManager : MonoBehaviour
         
     }
 
-    public void RestartGame()
+    public static void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
