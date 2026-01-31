@@ -1,4 +1,4 @@
-﻿<Solution>
-  <Project Path="Assembly-CSharp-Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
+<Solution>
+  <Project Path="Assembly-CSharp-Editor.csproj" Id="4a4fa863-6f9b-4223-34d6-3090c1941bbb" />
+  <Project Path="Assembly-CSharp.csproj" Id="a12e8443-3c1f-ddf6-925b-687caa0c4b29" />
 </Solution>
