@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -12,14 +13,20 @@ public class Player : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    transform.Translate(transform.forward, Space.Self);
+    transform.Translate(transform.forward, Space.World);
+  }
 
-    if (Input.GetKeyDown(KeyCode.A))
+  public void OnMoveLeft(InputAction.CallbackContext context)
+  {
+    if (context.started)
     {
       transform.Rotate(0, -90, 0);
     }
+  }
 
-    if (Input.GetKeyDown(KeyCode.D))
+  public void OnMoveRight(InputAction.CallbackContext context)
+  {
+    if (context.started)
     {
       transform.Rotate(0, 90, 0);
     }
