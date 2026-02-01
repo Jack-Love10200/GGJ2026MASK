@@ -33,7 +33,7 @@ public class ComboManager : MonoBehaviour
     [SerializeField]
     private ComboLevelSettings mComboLevelSettings;
 
-    float mDebugComboIncreaseRate = 200.0f;
+    //float mDebugComboIncreaseRate = 200.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
