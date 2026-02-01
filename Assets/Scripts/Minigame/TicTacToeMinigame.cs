@@ -8,6 +8,17 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
     [SerializeField] private Transform inputAreaTransform;
     [SerializeField] private Transform marksRoot;
     [SerializeField] private bool debugDrawInput = false;
+    [SerializeField] private float aiMoveDelaySeconds = 0.1f;
+    [Range(0f, 1f)]
+    [SerializeField] private float aiMistakeChance = 0.3f;
+    [SerializeField] private float resultDelaySeconds = 0.6f;
+    [SerializeField] private GameObject winVfxPrefab;
+    [SerializeField] private GameObject loseVfxPrefab;
+    [SerializeField] private GameObject drawVfxPrefab;
+    [SerializeField] private AudioClip winSfx;
+    [SerializeField] private AudioClip loseSfx;
+    [SerializeField] private AudioClip drawSfx;
+    [SerializeField] private AudioSource sfxSource;
     [FormerlySerializedAs("markPrefab")]
     [FormerlySerializedAs("playerMarkPrefab")]
     [SerializeField] private GameObject xMarkPrefab;
@@ -25,6 +36,9 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
     private bool loggedMissingBoardRenderer;
     private bool hasLastInput;
     private Vector3 lastLocalInput;
+    private float aiMoveTimer;
+    private bool aiMovePending;
+    private bool resultPending;
 
     private void Awake()
     {
@@ -38,7 +52,7 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
         ClearBoard();
         RandomizeSides();
         if (!playerTurn)
-            MakeAiMove();
+            ScheduleAiMove();
     }
 
     public void HandlePointerDown(Vector3 localPos)
@@ -65,6 +79,22 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
 
     public void Cancel()
     {
+        aiMovePending = false;
+        aiMoveTimer = 0f;
+        resultPending = false;
+    }
+
+    private void Update()
+    {
+        if (!aiMovePending)
+            return;
+
+        aiMoveTimer -= Time.deltaTime;
+        if (aiMoveTimer > 0f)
+            return;
+
+        aiMovePending = false;
+        MakeAiMove();
     }
 
     private bool TryPlace(Vector3 localPos, int mark)
@@ -107,20 +137,20 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
     {
         if (CheckWin(mark))
         {
-            MinigameManager.Instance?.EndMinigame(mark == playerMark);
+            ShowResult(mark == playerMark, false);
             return;
         }
 
         if (IsBoardFull())
         {
-            MinigameManager.Instance?.EndMinigame(false);
+            ShowResult(false, true);
             return;
         }
 
         if (mark == playerMark)
         {
             playerTurn = false;
-            MakeAiMove();
+            ScheduleAiMove();
         }
         else
         {
@@ -130,37 +160,15 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
 
     private void MakeAiMove()
     {
-        int emptyCount = 0;
-        for (int i = 0; i < cells.Length; i++)
-        {
-            if (cells[i] == 0)
-                emptyCount++;
-        }
-
-        if (emptyCount == 0)
-        {
-            MinigameManager.Instance?.EndMinigame(false);
+        if (resultPending)
             return;
-        }
 
-        int pick = Random.Range(0, emptyCount);
-        int chosen = -1;
-        for (int i = 0; i < cells.Length; i++)
-        {
-            if (cells[i] != 0)
-                continue;
-
-            if (pick == 0)
-            {
-                chosen = i;
-                break;
-            }
-
-            pick--;
-        }
-
+        int chosen = FindBestAiMove();
         if (chosen < 0)
+        {
+            ShowResult(false, true);
             return;
+        }
 
         TryPlaceIndex(chosen, aiMark);
         ResolveAfterMove(aiMark);
@@ -196,6 +204,18 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
         playerTurn = Random.value < 0.5f;
     }
 
+    private void ScheduleAiMove()
+    {
+        if (aiMoveDelaySeconds <= 0f)
+        {
+            MakeAiMove();
+            return;
+        }
+
+        aiMoveTimer = aiMoveDelaySeconds;
+        aiMovePending = true;
+    }
+
     private void ClearBoard()
     {
         for (int i = 0; i < cells.Length; i++)
@@ -207,6 +227,65 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
                 Destroy(marks[i]);
             marks[i] = null;
         }
+
+        aiMovePending = false;
+        aiMoveTimer = 0f;
+        resultPending = false;
+    }
+
+    private void ShowResult(bool playerWon, bool isDraw)
+    {
+        if (resultPending)
+            return;
+
+        resultPending = true;
+        aiMovePending = false;
+        aiMoveTimer = 0f;
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
+
+        GameObject vfxPrefab = null;
+        AudioClip clip = null;
+
+        if (isDraw)
+        {
+            vfxPrefab = drawVfxPrefab;
+            clip = drawSfx;
+        }
+        else if (playerWon)
+        {
+            vfxPrefab = winVfxPrefab;
+            clip = winSfx;
+        }
+        else
+        {
+            vfxPrefab = loseVfxPrefab;
+            clip = loseSfx;
+        }
+
+        if (vfxPrefab != null)
+        {
+            var root = marksRoot != null ? marksRoot : transform;
+            Instantiate(vfxPrefab, root);
+        }
+
+        if (clip != null && sfxSource != null)
+            sfxSource.PlayOneShot(clip);
+
+        if (resultDelaySeconds <= 0f)
+        {
+            MinigameManager.Instance?.EndMinigame(playerWon);
+            return;
+        }
+
+        StartCoroutine(EndAfterDelay(playerWon, resultDelaySeconds));
+    }
+
+    private System.Collections.IEnumerator EndAfterDelay(bool success, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        MinigameManager.Instance?.EndMinigame(success);
     }
 
     private bool IsBoardFull()
@@ -230,6 +309,106 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
                (cells[2] == player && cells[5] == player && cells[8] == player) ||
                (cells[0] == player && cells[4] == player && cells[8] == player) ||
                (cells[2] == player && cells[4] == player && cells[6] == player);
+    }
+
+    private int FindBestAiMove()
+    {
+        if (aiMistakeChance > 0f && Random.value < aiMistakeChance)
+            return PickRandomEmpty();
+
+        int winMove = FindWinningMove(aiMark);
+        if (winMove >= 0)
+            return winMove;
+
+        int blockMove = FindWinningMove(playerMark);
+        if (blockMove >= 0)
+            return blockMove;
+
+        if (cells[4] == 0)
+            return 4;
+
+        int corner = PickRandomEmpty(new int[] { 0, 2, 6, 8 });
+        if (corner >= 0)
+            return corner;
+
+        int side = PickRandomEmpty(new int[] { 1, 3, 5, 7 });
+        if (side >= 0)
+            return side;
+
+        return PickRandomEmpty();
+    }
+
+    private int FindWinningMove(int mark)
+    {
+        for (int i = 0; i < cells.Length; i++)
+        {
+            if (cells[i] != 0)
+                continue;
+
+            cells[i] = mark;
+            bool win = CheckWin(mark);
+            cells[i] = 0;
+
+            if (win)
+                return i;
+        }
+
+        return -1;
+    }
+
+    private int PickRandomEmpty()
+    {
+        int emptyCount = 0;
+        for (int i = 0; i < cells.Length; i++)
+        {
+            if (cells[i] == 0)
+                emptyCount++;
+        }
+
+        if (emptyCount == 0)
+            return -1;
+
+        int pick = Random.Range(0, emptyCount);
+        for (int i = 0; i < cells.Length; i++)
+        {
+            if (cells[i] != 0)
+                continue;
+
+            if (pick == 0)
+                return i;
+
+            pick--;
+        }
+
+        return -1;
+    }
+
+    private int PickRandomEmpty(int[] candidates)
+    {
+        int emptyCount = 0;
+        for (int i = 0; i < candidates.Length; i++)
+        {
+            if (cells[candidates[i]] == 0)
+                emptyCount++;
+        }
+
+        if (emptyCount == 0)
+            return -1;
+
+        int pick = Random.Range(0, emptyCount);
+        for (int i = 0; i < candidates.Length; i++)
+        {
+            int index = candidates[i];
+            if (cells[index] != 0)
+                continue;
+
+            if (pick == 0)
+                return index;
+
+            pick--;
+        }
+
+        return -1;
     }
 
     private Vector3 GetCellCenter(int row, int col, float boardWidth, float boardHeight, Vector2 areaCenter)

@@ -553,7 +553,7 @@ MonoBehaviour:
   focusWorldOffset: {x: 0, y: 0, z: -1.5}
   focusFov: 25
   showCursorDuringMinigame: 1
-  debugDrawMinigameInput: 1
+  debugDrawMinigameInput: 0
   debugDrawRayLength: 5
   debugDrawPlaneSize: 0.5
   debugDrawPointRadius: 0.03

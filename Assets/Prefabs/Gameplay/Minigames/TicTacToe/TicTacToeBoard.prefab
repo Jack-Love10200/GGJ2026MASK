@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7722062502781734003}
   - component: {fileID: 9159365737420869714}
+  - component: {fileID: 5864458449105647478}
   m_Layer: 0
   m_Name: InputAreaTransform
   m_TagString: Untagged
@@ -53,6 +54,65 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3, y: 0.3, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!212 &5864458449105647478
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672623231314822344}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: ccf735fe3274eb347bc03712a6e3294c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.92, y: 1.92}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1 &2282017211542815178
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,5 +254,14 @@ MonoBehaviour:
   inputAreaTransform: {fileID: 7722062502781734003}
   marksRoot: {fileID: 7503167875523287418}
   debugDrawInput: 0
+  aiMoveDelaySeconds: 0.5
+  resultDelaySeconds: 0.6
+  winVfxPrefab: {fileID: 0}
+  loseVfxPrefab: {fileID: 0}
+  drawVfxPrefab: {fileID: 0}
+  winSfx: {fileID: 0}
+  loseSfx: {fileID: 0}
+  drawSfx: {fileID: 0}
+  sfxSource: {fileID: 0}
   xMarkPrefab: {fileID: 7270813080537595432, guid: b058721a384f2ac409a60d0f02f04e30, type: 3}
   oMarkPrefab: {fileID: 7501431349492622921, guid: e80375e96ebc29c45b83fc917a360c55, type: 3}

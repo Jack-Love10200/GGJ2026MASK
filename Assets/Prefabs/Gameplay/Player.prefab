@@ -172,6 +172,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2864445684032499647}
   - {fileID: 3941142473749425759}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -380,6 +381,30 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: ce3eb45e-684a-44d0-91e9-0dd9092ab4d1
     m_ActionName: 'Player/MoveForward[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bc6c965e-8d4f-4269-b79b-28de8ea668ae
+    m_ActionName: 'Player/LeftArrow[/Keyboard/leftArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f4a17e81-4afd-4555-879b-7543e11e9d13
+    m_ActionName: 'Player/RightArrow[/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 14b6589a-9ef5-4123-b3b8-3d586a0fee52
+    m_ActionName: 'Player/UpArrow[/Keyboard/upArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fcd4c373-7ca1-4c31-b756-6dc813114917
+    m_ActionName: 'Player/DownArrow[/Keyboard/downArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5fbb63f5-1bb1-4a72-87f5-53da8d84d498
+    m_ActionName: 'Player/LeftClick[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 74eb3c9b-a308-459a-87fb-a15bb48ab65d
+    m_ActionName: 'Player/PointerPositionDelta[/Mouse/delta]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -412,3 +437,65 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1001 &8962620565466453573
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 820815985580576051}
+    m_Modifications:
+    - target: {fileID: 821087654123359338, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_Name
+      value: DebugHotkeys
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.54659
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.90982
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+--- !u!4 &2864445684032499647 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6602578076273834490, guid: e222af9d3c6050d45aff14160ac2dc53, type: 3}
+  m_PrefabInstance: {fileID: 8962620565466453573}
+  m_PrefabAsset: {fileID: 0}
