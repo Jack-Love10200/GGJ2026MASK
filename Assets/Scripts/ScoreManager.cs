@@ -26,6 +26,8 @@ public class ScoreManager : MonoBehaviour
     void Start()
     {
         gsm = PersistentScopeManagers.Instance.GetComponent<GameStateManager>();
+
+        m_KillCount = 0;
     }
 
     // Update is called once per frame
