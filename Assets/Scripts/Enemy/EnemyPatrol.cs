@@ -9,10 +9,12 @@ public class EnemyPatrol : MonoBehaviour
     private NavMeshAgent agent;
     private int index;
     private int direction = 1;
+    private GameStateManager gsm;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        gsm = FindAnyObjectByType<GameStateManager>();
     }
 
     private void Start()
@@ -28,6 +30,15 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Update()
     {
+        if (gsm != null && gsm.CurrentState != GameState.Playing)
+        {
+            agent.isStopped = true;
+            return;
+        }
+
+        if (agent.isStopped)
+            agent.isStopped = false;
+
         if (agent.pathPending)
             return;
 

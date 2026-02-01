@@ -1293,8 +1293,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   requireProximityForClick: 1
-  targetBox: {fileID: 0}
-  leftAction: {fileID: -722218826363907036, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  targetBox: {fileID: 1706431845}
+  leftAction: {fileID: 2319464449581155320, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
   rightAction: {fileID: -6359499368423187494, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
   upAction: {fileID: -9095361812574012677, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
   downAction: {fileID: -7381358581314511661, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}

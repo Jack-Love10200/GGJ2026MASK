@@ -19,6 +19,13 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField] private LayerMask raycastMask = ~0;
     [SerializeField] private float maxRaycastDistance = 200f;
 
+    private GameStateManager gsm;
+
+    private void Awake()
+    {
+        gsm = FindAnyObjectByType<GameStateManager>();
+    }
+
     private void OnEnable()
     {
         leftAction.action.Enable();
@@ -41,6 +48,9 @@ public class PlayerInteractor : MonoBehaviour
 
     private void Update()
     {
+        if (gsm != null && gsm.CurrentState != GameState.Playing)
+            return;
+
         HandleKeyInput();
         HandlePointerInput();
     }
@@ -49,10 +59,7 @@ public class PlayerInteractor : MonoBehaviour
     {
         var target = FindClosestEnemyWithMask();
         if (target == null)
-        {
-            Debug.Log("[PlayerInteractor] No target found for key input.");
             return;
-        }
 
         if (leftAction.action.WasPressedThisFrame())
             SendKeyInteraction(target, KeyCode.LeftArrow);
@@ -121,7 +128,6 @@ public class PlayerInteractor : MonoBehaviour
 
     private void SendKeyInteraction(EnemyMaskStackVisual target, KeyCode key)
     {
-        Debug.Log($"[PlayerInteractor] Key pressed: {key}");
         var evt = new InteractionEvent
         {
             type = InteractionType.KeyDown,
@@ -135,10 +141,7 @@ public class PlayerInteractor : MonoBehaviour
     {
         var hits = GetEnemyCandidates();
         if (hits == null || hits.Length == 0)
-        {
-            Debug.Log("[PlayerInteractor] OverlapBox found no enemy candidates.");
             return null;
-        }
 
         float bestDist = float.MaxValue;
         EnemyMaskStackVisual best = null;
@@ -157,25 +160,18 @@ public class PlayerInteractor : MonoBehaviour
             }
         }
 
-        if (best == null)
-            Debug.Log("[PlayerInteractor] Enemy candidates found but none have masks.");
-
         return best;
     }
 
     private Collider[] GetEnemyCandidates()
     {
         if (targetBox == null)
-        {
-            Debug.Log("[PlayerInteractor] targetBox is not assigned.");
             return null;
-        }
 
         var lossy = targetBox.transform.lossyScale;
         var scaled = new Vector3(Mathf.Abs(lossy.x), Mathf.Abs(lossy.y), Mathf.Abs(lossy.z));
         Vector3 halfExtents = Vector3.Scale(targetBox.size, scaled) * 0.5f;
         Vector3 center = targetBox.transform.TransformPoint(targetBox.center);
-        Debug.Log($"[PlayerInteractor] OverlapBox center: {center} halfExtents: {halfExtents} layer: {enemyLayer.value}");
         return Physics.OverlapBox(center, halfExtents, targetBox.transform.rotation, enemyLayer);
     }
 
