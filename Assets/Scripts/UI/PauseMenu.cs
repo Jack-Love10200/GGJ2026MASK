@@ -19,8 +19,8 @@ public class PauseMenu : MonoBehaviour
     [Header("Submenus")]
     public Transform submenuParent;
     public GameObject optionsMenuPrefab;
-    //public GameObject mainMenuConfirmationPrefab;
-    //public GameObject quitConfirmationPrefab;
+    public GameObject mainMenuConfirmationPrefab;
+    public GameObject quitConfirmationPrefab;
 
     private PauseManager pauseManager;
     private Coroutine fadeCoroutine;
@@ -67,12 +67,12 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenuButton()
     {
-        //Submenus.Add(Instantiate(mainMenuConfirmation, submenuParent));
+        Submenus.Add(Instantiate(mainMenuConfirmationPrefab, submenuParent));
     }
 
     public void QuitButton()
     {
-        //Submenus.Add(Instantiate(quitConfirmation, submenuParent));
+        Submenus.Add(Instantiate(quitConfirmationPrefab, submenuParent));
     }
 
     public void DestroySubmenus()
@@ -81,6 +81,18 @@ public class PauseMenu : MonoBehaviour
         if (optionsMenu != null)
         {
             optionsMenu.CloseButton();
+        }
+
+        MainMenuConfirmation mainMenuConfirmation = FindAnyObjectByType<MainMenuConfirmation>();
+        if (mainMenuConfirmation != null)
+        {
+            mainMenuConfirmation.NoButton();
+        }
+
+        QuitConfirmation quitConfirmation = FindAnyObjectByType<QuitConfirmation>();
+        if (quitConfirmation != null)
+        {
+            quitConfirmation.NoButton();
         }
 
         Submenus.Clear();

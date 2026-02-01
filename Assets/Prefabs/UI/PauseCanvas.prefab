@@ -1043,6 +1043,8 @@ MonoBehaviour:
   quitButton: {fileID: 8435667529502114561}
   submenuParent: {fileID: 5403670983425926845}
   optionsMenuPrefab: {fileID: 1221621145375781370, guid: e2f235d20f13cff4da5e45634ee49522, type: 3}
+  mainMenuConfirmationPrefab: {fileID: 5434459290554421227, guid: efbc9e13b00c0f847b02951350b8397d, type: 3}
+  quitConfirmationPrefab: {fileID: 5434459290554421227, guid: a1cb0b3bd875aee44ab8cecd3f333e98, type: 3}
 --- !u!95 &4982247225298148415
 Animator:
   serializedVersion: 7
