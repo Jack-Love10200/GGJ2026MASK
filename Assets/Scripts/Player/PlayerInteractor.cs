@@ -1,54 +1,81 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInteractor : MonoBehaviour
 {
     [Header("Targeting")]
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private float interactRadius = 2f;
     [SerializeField] private LayerMask enemyLayer = ~0;
     [SerializeField] private bool requireProximityForClick = true;
+    [SerializeField] private BoxCollider targetBox;
 
     [Header("Input")]
-    [SerializeField] private KeyCode[] keyInputs = { KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.DownArrow };
+    [SerializeField] private InputActionReference leftAction;
+    [SerializeField] private InputActionReference rightAction;
+    [SerializeField] private InputActionReference upAction;
+    [SerializeField] private InputActionReference downAction;
+    [SerializeField] private InputActionReference clickAction;
+    [SerializeField] private InputActionReference pointerPositionAction;
     [SerializeField] private LayerMask raycastMask = ~0;
     [SerializeField] private float maxRaycastDistance = 200f;
 
+    private GameStateManager gsm;
+
+    private void Awake()
+    {
+        gsm = FindAnyObjectByType<GameStateManager>();
+    }
+
+    private void OnEnable()
+    {
+        leftAction.action.Enable();
+        rightAction.action.Enable();
+        upAction.action.Enable();
+        downAction.action.Enable();
+        clickAction.action.Enable();
+        pointerPositionAction.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        leftAction.action.Disable();
+        rightAction.action.Disable();
+        upAction.action.Disable();
+        downAction.action.Disable();
+        clickAction.action.Disable();
+        pointerPositionAction.action.Disable();
+    }
+
     private void Update()
     {
+        if (gsm != null && gsm.CurrentState != GameState.Playing)
+            return;
+
         HandleKeyInput();
         HandlePointerInput();
     }
 
     private void HandleKeyInput()
     {
-        if (keyInputs == null || keyInputs.Length == 0)
-            return;
-
         var target = FindClosestEnemyWithMask();
         if (target == null)
             return;
 
-        for (int i = 0; i < keyInputs.Length; i++)
-        {
-            var key = keyInputs[i];
-            if (!Input.GetKeyDown(key))
-                continue;
-
-            var evt = new InteractionEvent
-            {
-                type = InteractionType.KeyDown,
-                key = key
-            };
-
-            target.TryHandleInteraction(evt, this);
-        }
+        if (leftAction.action.WasPressedThisFrame())
+            SendKeyInteraction(target, KeyCode.LeftArrow);
+        if (rightAction.action.WasPressedThisFrame())
+            SendKeyInteraction(target, KeyCode.RightArrow);
+        if (upAction.action.WasPressedThisFrame())
+            SendKeyInteraction(target, KeyCode.UpArrow);
+        if (downAction.action.WasPressedThisFrame())
+            SendKeyInteraction(target, KeyCode.DownArrow);
     }
 
     private void HandlePointerInput()
     {
-        bool down = Input.GetMouseButtonDown(0);
-        bool held = Input.GetMouseButton(0);
-        bool up = Input.GetMouseButtonUp(0);
+        bool down = clickAction.action.WasPressedThisFrame();
+        bool up = clickAction.action.WasReleasedThisFrame();
+        bool held = clickAction.action.ReadValue<float>() > 0f;
 
         if (!down && !held && !up)
             return;
@@ -59,7 +86,8 @@ public class PlayerInteractor : MonoBehaviour
         if (mainCamera == null)
             return;
 
-        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Vector2 pointer = pointerPositionAction.action.ReadValue<Vector2>();
+        var ray = mainCamera.ScreenPointToRay(new Vector3(pointer.x, pointer.y, 0f));
         if (!Physics.Raycast(ray, out var hit, maxRaycastDistance, raycastMask))
             return;
 
@@ -84,8 +112,7 @@ public class PlayerInteractor : MonoBehaviour
 
         if (requireProximityForClick)
         {
-            float dist = Vector3.Distance(transform.position, target.transform.position);
-            if (dist > interactRadius)
+            if (!IsInsideTargetBox(target.transform.position))
                 return;
         }
 
@@ -99,9 +126,20 @@ public class PlayerInteractor : MonoBehaviour
         target.TryHandleInteraction(evt, this);
     }
 
+    private void SendKeyInteraction(EnemyMaskStackVisual target, KeyCode key)
+    {
+        var evt = new InteractionEvent
+        {
+            type = InteractionType.KeyDown,
+            key = key
+        };
+
+        target.TryHandleInteraction(evt, this);
+    }
+
     private EnemyMaskStackVisual FindClosestEnemyWithMask()
     {
-        var hits = Physics.OverlapSphere(transform.position, interactRadius, enemyLayer);
+        var hits = GetEnemyCandidates();
         if (hits == null || hits.Length == 0)
             return null;
 
@@ -124,4 +162,36 @@ public class PlayerInteractor : MonoBehaviour
 
         return best;
     }
+
+    private Collider[] GetEnemyCandidates()
+    {
+        if (targetBox == null)
+            return null;
+
+        var lossy = targetBox.transform.lossyScale;
+        var scaled = new Vector3(Mathf.Abs(lossy.x), Mathf.Abs(lossy.y), Mathf.Abs(lossy.z));
+        Vector3 halfExtents = Vector3.Scale(targetBox.size, scaled) * 0.5f;
+        Vector3 center = targetBox.transform.TransformPoint(targetBox.center);
+        return Physics.OverlapBox(center, halfExtents, targetBox.transform.rotation, enemyLayer);
+    }
+
+    private bool IsInsideTargetBox(Vector3 worldPosition)
+    {
+        if (targetBox == null)
+            return false;
+
+        Vector3 local = targetBox.transform.InverseTransformPoint(worldPosition);
+        Vector3 centered = local - targetBox.center;
+        Vector3 half = targetBox.size * 0.5f;
+
+        if (Mathf.Abs(centered.x) > half.x)
+            return false;
+        if (Mathf.Abs(centered.y) > half.y)
+            return false;
+        if (Mathf.Abs(centered.z) > half.z)
+            return false;
+
+        return true;
+    }
+
 }

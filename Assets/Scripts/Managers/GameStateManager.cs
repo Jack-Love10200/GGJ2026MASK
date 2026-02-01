@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public enum GameState
 {
     MainMenu,
+    Win,
     Playing,
     Paused,
     GameOver
@@ -47,8 +48,6 @@ public class GameStateManager : MonoBehaviour
     {
         m_InitialState = m_CurrentState;
     }
-
-
 
     void Start()
     {
