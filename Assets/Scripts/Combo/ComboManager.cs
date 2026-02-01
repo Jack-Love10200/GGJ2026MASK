@@ -22,7 +22,7 @@ public class ComboManager : MonoBehaviour
 
     private ComboStats mCurrComboStats = new ComboStats();
 
-    float mCurrComboValue = 0.0f;
+    public float mCurrComboValue = 0.0f;
 
     int mCurrComboLevel = -1;
 
@@ -33,7 +33,7 @@ public class ComboManager : MonoBehaviour
     [SerializeField]
     private ComboLevelSettings mComboLevelSettings;
 
-    float mDebugComboIncreaseRate = 200.0f;
+    //float mDebugComboIncreaseRate = 200.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -89,6 +89,45 @@ public class ComboManager : MonoBehaviour
         }
         return mComboLevelSettings.mComboLevelNames[mCurrComboLevel];
     }
+
+    public void DebugIncreaseComboValue(float amountToIncreaseCombo)
+    {
+        IncreaseComboValue(amountToIncreaseCombo);
+    }
+
+    public void DebugDecreaseComboValue(float amountToDecreaseCombo)
+    {
+        IncreaseComboValue(-1.0f * amountToDecreaseCombo);
+
+    }
+
+    public void DebugIncrementComboLevel()
+    {
+        // if there are more combo levels
+        if (mCurrComboLevel + 1 < mComboLevelSettings.mComboLevelThresholds.Count - 1)
+        {
+            IncreaseComboValue(mComboLevelSettings.mComboLevelThresholds[mCurrComboLevel + 1] - mCurrComboValue);
+        }
+    }
+    public void DebugDecrementComboLevel()
+    {
+        // if there are more combo levels
+        if (mCurrComboLevel - 1 > 0)
+        {
+            IncreaseComboValue(-1 * (mCurrComboValue - mComboLevelSettings.mComboLevelThresholds[mCurrComboLevel - 1]) - 1);
+        }
+    }
+
+
+    public float GetCurrentComboValue()
+    {   
+        return mCurrComboValue;
+    }
+
+    public Sprite GetCurrentComboSprite()
+    {
+        return mComboLevelSettings.mComboLevelSprites[mCurrComboLevel];
+    }
     // Private functions
 
     void IncreaseComboValue(float amountToIncreaseCombo)
@@ -101,6 +140,7 @@ public class ComboManager : MonoBehaviour
 
         }
     }
+
 
     // Recalculates combo level
     // returns true if combo level changed, false otherwise

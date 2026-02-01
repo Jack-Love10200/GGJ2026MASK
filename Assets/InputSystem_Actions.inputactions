@@ -497,6 +497,94 @@
             ]
         },
         {
+            "name": "Debug",
+            "id": "39e28c83-793d-4f8a-918b-92e90d343e78",
+            "actions": [
+                {
+                    "name": "DebugIncreaseComboScore",
+                    "type": "Button",
+                    "id": "3e64d46f-90cb-4cf8-a190-d127e146e6dc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DebugDecreaseComboScore",
+                    "type": "Button",
+                    "id": "4bfaa431-7152-4a8e-a378-b59f0a23cd6e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DebugIncreaseComboLevel",
+                    "type": "Button",
+                    "id": "b446d46d-37d6-44d6-b4a5-b71716d58d2f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DebugDecreaseComboLevel",
+                    "type": "Button",
+                    "id": "4aa81c2f-cdc8-452f-90b6-d3ea7fab1f87",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8fc2e160-6896-4c11-8530-93c1148259e5",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DebugIncreaseComboScore",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "333a36c2-1873-489d-8a02-8005f972149d",
+                    "path": "<Keyboard>/9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DebugDecreaseComboScore",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6acbc724-ced0-42f8-9a37-8a6f4dbb90d5",
+                    "path": "<Keyboard>/8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DebugIncreaseComboLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f70f5c37-066f-4a9e-8779-98d185006b8a",
+                    "path": "<Keyboard>/7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DebugDecreaseComboLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "UI",
             "id": "272f6d14-89ba-496f-b7ff-215263d3219f",
             "actions": [
