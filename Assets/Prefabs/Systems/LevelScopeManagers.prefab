@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -6335171072404699508}
   - component: {fileID: -5435967920585261704}
   - component: {fileID: 2908682941729869518}
+  - component: {fileID: 3253775028147290473}
   m_Layer: 0
   m_Name: LevelScopeManagers
   m_TagString: Untagged
@@ -74,3 +75,16 @@ MonoBehaviour:
   minigames:
   - id: Tic Tac Toe
     prefab: {fileID: 0}
+--- !u!114 &3253775028147290473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4535950531476503485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8673f6084c306694ca391db27e7e8a2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
+  KillQuota: 10
