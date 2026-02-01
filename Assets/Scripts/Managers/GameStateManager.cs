@@ -13,17 +13,14 @@ public enum GameState
 
 public class GameStateManager : MonoBehaviour
 {
-    // private /////////////////////////////
-    [SerializeField]
-    private GameState m_CurrentState;
-
+    // public ///////////////////////////////////////////////////////
     public GameState CurrentState
     {
         set 
         {
             m_CurrentState = value;
-            if (onGameStateSwitchEvent != null)
-                onGameStateSwitchEvent.Invoke(value);
+            if (m_OnGameStateSwitchEvent != null)
+                m_OnGameStateSwitchEvent.Invoke(value);
         }
 
         get
@@ -32,28 +29,30 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    private GameState initialState;
-
     public Action<GameState> OnStateSwitch
     {
-        get { return onGameStateSwitchEvent; }
+        get { return m_OnGameStateSwitchEvent; }
 
-        set { onGameStateSwitchEvent += value; }
+        set { m_OnGameStateSwitchEvent += value; }
     }
 
-    private Action<GameState> onGameStateSwitchEvent;
+    // private ////////////////////////////////////////////////////
+    [SerializeField]
+    private GameState m_CurrentState;
+    private GameState m_InitialState;
+    private Action<GameState> m_OnGameStateSwitchEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
-        initialState = m_CurrentState;
+        m_InitialState = m_CurrentState;
     }
 
 
 
     void Start()
     {
-        m_CurrentState = initialState;
+        m_CurrentState = m_InitialState;
     }
 
     // Update is called once per frame
