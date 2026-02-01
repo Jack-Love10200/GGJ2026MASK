@@ -199,9 +199,10 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
 
     private void RandomizeSides()
     {
-        playerMark = Random.value < 0.5f ? XMark : OMark;
-        aiMark = playerMark == XMark ? OMark : XMark;
         playerTurn = Random.value < 0.5f;
+        // First mover always plays X.
+        playerMark = playerTurn ? XMark : OMark;
+        aiMark = playerMark == XMark ? OMark : XMark;
     }
 
     private void ScheduleAiMove()
