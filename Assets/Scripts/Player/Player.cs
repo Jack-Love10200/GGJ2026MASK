@@ -38,6 +38,9 @@ public class Player : MonoBehaviour
   private TurnData currentTurn;
 
   private MovementState currentState = MovementState.Moving;
+  private bool pausedByMinigame;
+  private MovementState savedState;
+  private TurnData savedTurn;
 
 
   InputDirection desiredDirection = InputDirection.Forward;
@@ -48,6 +51,9 @@ public class Player : MonoBehaviour
   }
   void Update()
   {
+    if (pausedByMinigame)
+      return;
+
     if (currentState == MovementState.Moving)
     {
       transform.Translate(Vector3.forward * Speed * Time.deltaTime);
@@ -76,6 +82,9 @@ public class Player : MonoBehaviour
 
   void OnTriggerEnter(Collider other)
   {
+    if (pausedByMinigame)
+      return;
+
     currentState = MovementState.Turning;
 
     Debug.Log("Trigger enter");
@@ -133,5 +142,23 @@ public class Player : MonoBehaviour
 
     if (context.started)
       desiredDirection = InputDirection.Right;
+  }
+
+  public void SetMinigamePaused(bool paused)
+  {
+    if (paused == pausedByMinigame)
+      return;
+
+    pausedByMinigame = paused;
+    if (paused)
+    {
+      savedState = currentState;
+      savedTurn = currentTurn;
+    }
+    else
+    {
+      currentState = savedState;
+      currentTurn = savedTurn;
+    }
   }
 }

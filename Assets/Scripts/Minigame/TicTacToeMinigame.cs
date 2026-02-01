@@ -504,10 +504,33 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
         var box = areaTransform.GetComponent<BoxCollider>();
         if (box != null)
         {
-            Vector3 worldSize = Vector3.Scale(box.size, areaTransform.lossyScale);
-            Vector3 localSize = transform.InverseTransformVector(worldSize);
-            boardWidth = Mathf.Abs(localSize.x);
-            boardHeight = Mathf.Abs(localSize.y);
+            // Compute bounds in minigame-local space to avoid non-uniform scale + rotation distortion.
+            Vector3 half = box.size * 0.5f;
+            Vector3 center = box.center;
+            Matrix4x4 localToWorld = box.transform.localToWorldMatrix;
+            Matrix4x4 worldToLocal = transform.worldToLocalMatrix;
+
+            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+
+            for (int sx = -1; sx <= 1; sx += 2)
+            {
+                for (int sy = -1; sy <= 1; sy += 2)
+                {
+                    for (int sz = -1; sz <= 1; sz += 2)
+                    {
+                        Vector3 localCorner = center + new Vector3(half.x * sx, half.y * sy, half.z * sz);
+                        Vector3 worldCorner = localToWorld.MultiplyPoint3x4(localCorner);
+                        Vector3 rootLocal = worldToLocal.MultiplyPoint3x4(worldCorner);
+                        min = Vector3.Min(min, rootLocal);
+                        max = Vector3.Max(max, rootLocal);
+                    }
+                }
+            }
+
+            boardWidth = Mathf.Abs(max.x - min.x);
+            boardHeight = Mathf.Abs(max.y - min.y);
+            areaCenter = new Vector2((min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f);
             return boardWidth > 0f && boardHeight > 0f;
         }
 

@@ -24,6 +24,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [SerializeField] private bool deterministicJitter = true;
     [Tooltip("0 = use instance ID.")]
     [SerializeField] private int seedOverride = 0;
+    [SerializeField] private bool debugInteractions = false;
 
     private readonly List<MaskLayer> layers = new List<MaskLayer>();
     private ComboManager comboManager;
@@ -59,16 +60,30 @@ public class EnemyMaskStackVisual : MonoBehaviour
     public bool TryHandleInteraction(InteractionEvent evt, PlayerInteractor caller)
     {
         if (layers.Count == 0)
+        {
+            if (debugInteractions)
+                Debug.Log($"{nameof(EnemyMaskStackVisual)}: No layers to interact.", this);
             return false;
+        }
 
         var top = layers[layers.Count - 1];
         if (top.def == null)
+        {
+            if (debugInteractions)
+                Debug.Log($"{nameof(EnemyMaskStackVisual)}: Top layer def is null.", this);
             return false;
+        }
 
         var unlockAction = top.def.GetUnlockAction();
         if (unlockAction == null)
+        {
+            if (debugInteractions)
+                Debug.Log($"{nameof(EnemyMaskStackVisual)}: Unlock action missing on {top.def.name}.", this);
             return false;
+        }
 
+        if (debugInteractions)
+            Debug.Log($"{nameof(EnemyMaskStackVisual)}: Interaction {evt.type} -> {unlockAction.name}", this);
         var ctx = new MinigameContext(this, top.anchor, caller, cachedAgent);
         unlockAction.OnInteract(ctx, evt);
         return true;

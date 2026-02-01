@@ -10,11 +10,13 @@ public class EnemyPatrol : MonoBehaviour
     private int index;
     private int direction = 1;
     private GameStateManager gsm;
+    private EnemyMaskStackVisual maskVisual;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         gsm = FindAnyObjectByType<GameStateManager>();
+        maskVisual = GetComponentInParent<EnemyMaskStackVisual>();
     }
 
     private void Start()
@@ -30,6 +32,13 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Update()
     {
+        var minigame = MinigameManager.Instance;
+        if (minigame != null && minigame.HasActiveMinigame && minigame.ActiveEnemy == maskVisual)
+        {
+            agent.isStopped = true;
+            return;
+        }
+
         if (gsm != null && gsm.CurrentState != GameState.Playing)
         {
             agent.isStopped = true;
