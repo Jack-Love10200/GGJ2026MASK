@@ -16,9 +16,16 @@ public class MinigameManager : MonoBehaviour
     [Header("Camera Focus")]
     [SerializeField] private bool focusCameraOnMinigame = true;
     [SerializeField] private Camera focusCamera;
+    [FormerlySerializedAs("focusWorldOffset")]
     [FormerlySerializedAs("focusLocalOffset")]
-    [SerializeField] private Vector3 focusWorldOffset = new Vector3(0f, 0f, -1.5f);
+    [SerializeField] private Vector3 focusLocalOffset = new Vector3(0f, 0f, -1.5f);
     [SerializeField] private float focusFov = 25f;
+    [SerializeField] private bool smoothCameraFocus = true;
+    [Tooltip("Seconds to smooth camera focus. 0 = snap.")]
+    [SerializeField] private float focusSmoothTime = 0.25f;
+    [Tooltip("Freeze anchor rotation at minigame start to avoid camera/anchor feedback loops.")]
+    [SerializeField] private bool lockFocusRotationOnStart = true;
+    [SerializeField] private bool debugMinigameFlow = false;
     [SerializeField] private bool showCursorDuringMinigame = true;
     [SerializeField] private bool debugDrawMinigameInput = false;
     [SerializeField] private float debugDrawRayLength = 5f;
@@ -39,6 +46,10 @@ public class MinigameManager : MonoBehaviour
     private Vector3 originalCameraPosition;
     private Quaternion originalCameraRotation;
     private float originalCameraFov;
+    private Vector3 focusPositionVelocity;
+    private float focusFovVelocity;
+    private bool hasFocusRotation;
+    private Quaternion focusRotation;
     private bool hasCursorOverride;
     private bool originalCursorVisible;
     private CursorLockMode originalCursorLockMode;
@@ -65,24 +76,39 @@ public class MinigameManager : MonoBehaviour
     public void StartMinigame(string id, MinigameContext ctx)
     {
         if (activeMinigame != null)
+        {
+            if (debugMinigameFlow)
+                Debug.Log($"{nameof(MinigameManager)}: StartMinigame ignored (already active).", this);
             return;
+        }
 
         if (ctx == null || ctx.anchor == null)
+        {
+            if (debugMinigameFlow)
+                Debug.Log($"{nameof(MinigameManager)}: StartMinigame missing ctx/anchor.", this);
             return;
+        }
 
         if (!minigameLookup.TryGetValue(id, out var prefab) || prefab == null)
         {
+            if (debugMinigameFlow)
+                Debug.Log($"{nameof(MinigameManager)}: StartMinigame id not found: {id}", this);
             Debug.LogWarning($"{nameof(MinigameManager)}: Minigame id not found: {id}", this);
             return;
         }
 
-        activeInstance = Instantiate(prefab, ctx.anchor, false);
+        if (debugMinigameFlow)
+            Debug.Log($"{nameof(MinigameManager)}: StartMinigame instantiate {id}.", this);
+        Transform anchorToUse = ctx.anchor;
+        activeInstance = Instantiate(prefab, anchorToUse, false);
         activeMinigame = activeInstance.GetComponent<IMinigame>();
         if (activeMinigame == null)
             activeMinigame = activeInstance.GetComponentInChildren<IMinigame>();
 
         if (activeMinigame == null)
         {
+            if (debugMinigameFlow)
+                Debug.Log($"{nameof(MinigameManager)}: Minigame prefab missing IMinigame: {id}", this);
             Debug.LogWarning($"{nameof(MinigameManager)}: Minigame prefab missing IMinigame: {id}", this);
             Destroy(activeInstance);
             activeInstance = null;
@@ -90,6 +116,17 @@ public class MinigameManager : MonoBehaviour
         }
 
         activeContext = ctx;
+        activeContext.anchor = anchorToUse;
+
+        if (lockFocusRotationOnStart && anchorToUse != null)
+        {
+            hasFocusRotation = true;
+            focusRotation = anchorToUse.rotation;
+        }
+        else
+        {
+            hasFocusRotation = false;
+        }
 
         if (ctx.agentToStop != null)
         {
@@ -97,9 +134,10 @@ public class MinigameManager : MonoBehaviour
             ctx.agentToStop.isStopped = true;
         }
 
+        SetPlayerMinigamePaused(activeContext, true);
         BeginCursorOverride();
-        BeginCameraFocus(ctx.anchor);
-        activeMinigame.Begin(ctx);
+        BeginCameraFocus(anchorToUse);
+        activeMinigame.Begin(activeContext);
     }
 
     public void EndMinigame(bool success)
@@ -188,17 +226,31 @@ public class MinigameManager : MonoBehaviour
         if (stoppedAgent && activeContext != null && activeContext.agentToStop != null)
             activeContext.agentToStop.isStopped = false;
 
+        SetPlayerMinigamePaused(activeContext, false);
         RestoreCursorOverride();
         RestoreCameraFocus();
 
         stoppedAgent = false;
         activeMinigame = null;
         activeContext = null;
+        hasFocusRotation = false;
 
         if (activeInstance != null)
             Destroy(activeInstance);
 
         activeInstance = null;
+    }
+
+    private void SetPlayerMinigamePaused(MinigameContext ctx, bool paused)
+    {
+        if (ctx == null || ctx.player == null)
+            return;
+
+        var playerMover = ctx.player.GetComponent<Player>();
+        if (playerMover == null)
+            return;
+
+        playerMover.SetMinigamePaused(paused);
     }
 
     private void BeginCursorOverride()
@@ -243,6 +295,8 @@ public class MinigameManager : MonoBehaviour
             originalCameraPosition = focusCamera.transform.position;
             originalCameraRotation = focusCamera.transform.rotation;
             originalCameraFov = focusCamera.fieldOfView;
+            focusPositionVelocity = Vector3.zero;
+            focusFovVelocity = 0f;
             hasCameraFocus = true;
         }
 
@@ -279,13 +333,40 @@ public class MinigameManager : MonoBehaviour
 
     private void ApplyCameraFocus(Transform anchor)
     {
-        Vector3 targetPos = anchor.position + focusWorldOffset;
+        Quaternion basisRotation = hasFocusRotation ? focusRotation : anchor.rotation;
+        Vector3 targetPos = anchor.position + (basisRotation * focusLocalOffset);
+        Quaternion targetRot = Quaternion.LookRotation(anchor.position - targetPos, Vector3.up);
+
+        if (smoothCameraFocus && focusSmoothTime > 0f)
+        {
+            focusCamera.transform.position = Vector3.SmoothDamp(
+                focusCamera.transform.position,
+                targetPos,
+                ref focusPositionVelocity,
+                focusSmoothTime);
+
+            float t = 1f - Mathf.Exp(-Time.deltaTime / focusSmoothTime);
+            focusCamera.transform.rotation = Quaternion.Slerp(focusCamera.transform.rotation, targetRot, t);
+
+            if (focusFov > 0f)
+            {
+                focusCamera.fieldOfView = Mathf.SmoothDamp(
+                    focusCamera.fieldOfView,
+                    focusFov,
+                    ref focusFovVelocity,
+                    focusSmoothTime);
+            }
+
+            return;
+        }
+
         focusCamera.transform.position = targetPos;
-        focusCamera.transform.rotation = Quaternion.LookRotation(anchor.position - targetPos, Vector3.up);
+        focusCamera.transform.rotation = targetRot;
 
         if (focusFov > 0f)
             focusCamera.fieldOfView = focusFov;
     }
+
 
     private void BuildLookup()
     {

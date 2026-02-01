@@ -73,8 +73,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MinigameManager
   minigames:
-  - id: Tic Tac Toe
-    prefab: {fileID: 0}
+  - id: tictactoe
+    prefab: {fileID: 5833809555095692221, guid: 12525e94a766dd349ae16758d8feeaa5, type: 3}
+  focusCameraOnMinigame: 1
+  focusCamera: {fileID: 0}
+  focusWorldOffset: {x: 0, y: 0, z: -1.5}
+  focusFov: 25
+  smoothCameraFocus: 1
+  focusSmoothTime: 0.25
+  showCursorDuringMinigame: 1
+  debugDrawMinigameInput: 0
+  debugDrawRayLength: 5
+  debugDrawPlaneSize: 0.5
+  debugDrawPointRadius: 0.03
 --- !u!114 &3253775028147290473
 MonoBehaviour:
   m_ObjectHideFlags: 0
