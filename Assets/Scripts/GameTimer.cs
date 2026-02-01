@@ -52,5 +52,15 @@ public class GameTimer : MonoBehaviour
             currentTime = 0.0;
             gameStateManager.CurrentState = GameState.GameOver;
         }
+
+        if (Time.timeScale != 0)
+        {
+            timerLabel.gameObject.SetActive(true);
+            timerLabel.text = GetCurrentTime();
+        }
+        else
+        {
+            timerLabel.gameObject.SetActive(false);
+        }
     }
 }

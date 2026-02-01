@@ -21,7 +21,7 @@ MonoBehaviour:
   - LooksMasking
   - Maskter
   mComboLevelThresholds:
-  - 0
+  - 10
   - 100
   - 300
   - 500
@@ -29,11 +29,11 @@ MonoBehaviour:
   - 2000
   - 5000
   mComboLevelSprites:
-  - {fileID: 21300000, guid: e3c590e1f2e6f4647831e0a1f9c5c61d, type: 3}
-  - {fileID: 21300000, guid: 45d5b915f7492cc48b8150a1a2d16b5c, type: 3}
-  - {fileID: 21300000, guid: 1a1bcfafcb579404490096e2376f6cc2, type: 3}
-  - {fileID: 21300000, guid: e8b54a78137239e4793a377787ddbd87, type: 3}
-  - {fileID: 21300000, guid: 26040639cbba552439f472136c7c19c7, type: 3}
-  - {fileID: 21300000, guid: 921a2254e86b27242bcfc00bc25b206c, type: 3}
-  - {fileID: 21300000, guid: dbb975ef20efd2847b16ae7f40a9d357, type: 3}
+  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
+  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
+  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
+  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
+  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
+  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
+  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
   mComboValueVisualScalar: 1
