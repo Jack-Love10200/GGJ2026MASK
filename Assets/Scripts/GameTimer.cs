@@ -5,16 +5,23 @@ public class GameTimer : MonoBehaviour
 {
     // public ////////////////////////////////
     public double startTime = 120.0; // start time in seconds
-    public TextMeshProUGUI timeText; // reference to the TextMeshPro component to display the time
-    public GameObject loseScreen; // reference to the lose screen object
+    public TextMeshProUGUI debugText; // reference to the TextMeshPro component to display the time
+    public GameObject loseScreenPrefab; // reference to the lose screen object
 
     // private ///////////////////////////////
     private double currentTime = 0.0; // is set to the start time at the beginning of the game. decreases as time passes.
+    private GameStateManager gsm;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void TimerStart()
     {
+        gsm = PersistentScopeManagers.Instance.GetComponent<GameStateManager>();
         currentTime = startTime;
+    }
+
+    string GetCurrentTime()
+    {
+        return currentTime.ToString("F2");
     }
 
     void Start()
@@ -26,7 +33,7 @@ public class GameTimer : MonoBehaviour
     void Update()
     {
         // only lower the timer if the game is running
-        if (GameStateManager.Instance.currentState != GameState.Playing)
+        if (gsm.currentState != GameState.Playing)
             return;
 
         currentTime -= Time.deltaTime;
@@ -34,11 +41,13 @@ public class GameTimer : MonoBehaviour
         if (currentTime <= 0.0)
         {
             // end game
-            loseScreen.SetActive(true);
+            GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
+            Instantiate(loseScreenPrefab, canvas.transform);
             currentTime = 0.0;
-            GameStateManager.Instance.currentState = GameState.GameOver;
+            gsm.currentState = GameState.GameOver;
         }
 
-        timeText.text = currentTime.ToString("F2");
+        if (debugText)
+            debugText.text = currentTime.ToString("F2");
     }
 }

@@ -27,7 +27,6 @@ public class ComboManager : MonoBehaviour
     int mCurrComboLevel = -1;
 
 
-
     //[SerializeField]
     //AnimationCurve
 
@@ -55,7 +54,18 @@ public class ComboManager : MonoBehaviour
             }
         }
 
-        //IncreaseComboValue(mDebugComboIncreaseRate * Time.deltaTime);
+        // For debugging, increase value always over time. TODO: remove or put this under a debug bool
+        IncreaseComboValue(mDebugComboIncreaseRate * Time.deltaTime);
+
+        if (mCurrComboValue > mComboLevelSettings.mComboLevelThresholds[mComboLevelSettings.mComboLevelThresholds.Count - 1])
+        {
+            mDebugComboIncreaseRate = Mathf.Abs(mDebugComboIncreaseRate) * -1;
+        }
+
+        if (mCurrComboValue < 0)
+        {
+            mDebugComboIncreaseRate = Mathf.Abs(mDebugComboIncreaseRate);
+        }
     }
 
     // Public interface
@@ -67,6 +77,7 @@ public class ComboManager : MonoBehaviour
 
         // TODO: change this to factor in the specific value for whatever enemy was finished
         IncreaseComboValue(numEnemiesFinished);
+            
     }
 
     
