@@ -61,8 +61,9 @@ public class GameStateManager : MonoBehaviour
     {
         GameStateManager gsm = PersistentScopeManagers.Instance.GetComponent<GameStateManager>();
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         gsm.CurrentState = GameState.Playing;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        
     }
 
 }
