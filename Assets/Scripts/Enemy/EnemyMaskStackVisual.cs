@@ -60,11 +60,19 @@ public class EnemyMaskStackVisual : MonoBehaviour
 
         var top = layers[layers.Count - 1];
         if (top.def == null)
+        {
+            Debug.Log("[EnemyMaskStackVisual] Top mask def is null.", this);
             return false;
+        }
 
         var unlockAction = top.def.GetUnlockAction();
         if (unlockAction == null)
+        {
+            Debug.Log($"[EnemyMaskStackVisual] No unlock action on mask: {top.def.debugName}", this);
             return false;
+        }
+
+        Debug.Log($"[EnemyMaskStackVisual] Interaction {evt.type} key:{evt.key} on {top.def.debugName} -> {unlockAction.GetType().Name}", this);
 
         var ctx = new MinigameContext(this, top.anchor, caller);
         unlockAction.OnInteract(ctx, evt);
