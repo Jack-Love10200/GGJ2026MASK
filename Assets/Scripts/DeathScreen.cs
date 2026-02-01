@@ -18,4 +18,14 @@ public class DeathScreen : MonoBehaviour
     {
         GameStateManager.RestartGame();
     }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }
