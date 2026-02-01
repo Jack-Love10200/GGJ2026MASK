@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MinigameManager : MonoBehaviour
 {
@@ -12,6 +13,18 @@ public class MinigameManager : MonoBehaviour
 
     [SerializeField] private List<MinigameEntry> minigames = new List<MinigameEntry>();
 
+    [Header("Camera Focus")]
+    [SerializeField] private bool focusCameraOnMinigame = true;
+    [SerializeField] private Camera focusCamera;
+    [FormerlySerializedAs("focusLocalOffset")]
+    [SerializeField] private Vector3 focusWorldOffset = new Vector3(0f, 0f, -1.5f);
+    [SerializeField] private float focusFov = 25f;
+    [SerializeField] private bool showCursorDuringMinigame = true;
+    [SerializeField] private bool debugDrawMinigameInput = false;
+    [SerializeField] private float debugDrawRayLength = 5f;
+    [SerializeField] private float debugDrawPlaneSize = 0.5f;
+    [SerializeField] private float debugDrawPointRadius = 0.03f;
+
     public static MinigameManager Instance { get; private set; }
 
     public bool HasActiveMinigame => activeMinigame != null;
@@ -22,6 +35,20 @@ public class MinigameManager : MonoBehaviour
     private MinigameContext activeContext;
     private GameObject activeInstance;
     private bool stoppedAgent;
+    private bool hasCameraFocus;
+    private Vector3 originalCameraPosition;
+    private Quaternion originalCameraRotation;
+    private float originalCameraFov;
+    private bool hasCursorOverride;
+    private bool originalCursorVisible;
+    private CursorLockMode originalCursorLockMode;
+    private bool hasDebugPoint;
+    private Vector3 debugRayOrigin;
+    private Vector3 debugRayDir;
+    private Vector3 debugPlaneOrigin;
+    private Vector3 debugPlaneRight;
+    private Vector3 debugPlaneUp;
+    private Vector3 debugPoint;
 
     private void Awake()
     {
@@ -70,6 +97,8 @@ public class MinigameManager : MonoBehaviour
             ctx.agentToStop.isStopped = true;
         }
 
+        BeginCursorOverride();
+        BeginCameraFocus(ctx.anchor);
         activeMinigame.Begin(ctx);
     }
 
@@ -122,10 +151,45 @@ public class MinigameManager : MonoBehaviour
         activeMinigame.HandlePointerUp(localPos);
     }
 
+    public bool TryGetPointerWorldPoint(Ray ray, out Vector3 worldPoint)
+    {
+        worldPoint = default;
+        if (activeContext == null || activeContext.anchor == null)
+            return false;
+
+        var plane = new Plane(activeContext.anchor.forward, activeContext.anchor.position);
+        if (!plane.Raycast(ray, out float distance))
+        {
+            if (debugDrawMinigameInput)
+            {
+                debugRayOrigin = ray.origin;
+                debugRayDir = ray.direction;
+                hasDebugPoint = false;
+            }
+            return false;
+        }
+
+        worldPoint = ray.GetPoint(distance);
+        if (debugDrawMinigameInput)
+        {
+            debugRayOrigin = ray.origin;
+            debugRayDir = ray.direction;
+            debugPlaneOrigin = activeContext.anchor.position;
+            debugPlaneRight = activeContext.anchor.right;
+            debugPlaneUp = activeContext.anchor.up;
+            debugPoint = worldPoint;
+            hasDebugPoint = true;
+        }
+        return true;
+    }
+
     private void CleanupActive()
     {
         if (stoppedAgent && activeContext != null && activeContext.agentToStop != null)
             activeContext.agentToStop.isStopped = false;
+
+        RestoreCursorOverride();
+        RestoreCameraFocus();
 
         stoppedAgent = false;
         activeMinigame = null;
@@ -135,6 +199,92 @@ public class MinigameManager : MonoBehaviour
             Destroy(activeInstance);
 
         activeInstance = null;
+    }
+
+    private void BeginCursorOverride()
+    {
+        if (!showCursorDuringMinigame)
+            return;
+
+        if (!hasCursorOverride)
+        {
+            originalCursorVisible = Cursor.visible;
+            originalCursorLockMode = Cursor.lockState;
+            hasCursorOverride = true;
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private void RestoreCursorOverride()
+    {
+        if (!hasCursorOverride)
+            return;
+
+        Cursor.lockState = originalCursorLockMode;
+        Cursor.visible = originalCursorVisible;
+        hasCursorOverride = false;
+    }
+
+    private void BeginCameraFocus(Transform anchor)
+    {
+        if (!focusCameraOnMinigame || anchor == null)
+            return;
+
+        if (focusCamera == null)
+            focusCamera = Camera.main;
+
+        if (focusCamera == null)
+            return;
+
+        if (!hasCameraFocus)
+        {
+            originalCameraPosition = focusCamera.transform.position;
+            originalCameraRotation = focusCamera.transform.rotation;
+            originalCameraFov = focusCamera.fieldOfView;
+            hasCameraFocus = true;
+        }
+
+        ApplyCameraFocus(anchor);
+    }
+
+    private void RestoreCameraFocus()
+    {
+        if (!hasCameraFocus)
+            return;
+
+        if (focusCamera == null)
+            focusCamera = Camera.main;
+
+        if (focusCamera == null)
+        {
+            hasCameraFocus = false;
+            return;
+        }
+
+        focusCamera.transform.position = originalCameraPosition;
+        focusCamera.transform.rotation = originalCameraRotation;
+        focusCamera.fieldOfView = originalCameraFov;
+        hasCameraFocus = false;
+    }
+
+    private void LateUpdate()
+    {
+        if (!hasCameraFocus || !focusCameraOnMinigame || activeContext == null || activeContext.anchor == null)
+            return;
+
+        ApplyCameraFocus(activeContext.anchor);
+    }
+
+    private void ApplyCameraFocus(Transform anchor)
+    {
+        Vector3 targetPos = anchor.position + focusWorldOffset;
+        focusCamera.transform.position = targetPos;
+        focusCamera.transform.rotation = Quaternion.LookRotation(anchor.position - targetPos, Vector3.up);
+
+        if (focusFov > 0f)
+            focusCamera.fieldOfView = focusFov;
     }
 
     private void BuildLookup()
@@ -157,5 +307,30 @@ public class MinigameManager : MonoBehaviour
     private void OnValidate()
     {
         BuildLookup();
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!debugDrawMinigameInput)
+            return;
+
+        if (debugRayDir.sqrMagnitude > 0f)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawRay(debugRayOrigin, debugRayDir * debugDrawRayLength);
+        }
+
+        Gizmos.color = Color.yellow;
+        if (debugPlaneRight.sqrMagnitude > 0f && debugPlaneUp.sqrMagnitude > 0f)
+        {
+            Gizmos.DrawLine(debugPlaneOrigin - debugPlaneRight * debugDrawPlaneSize, debugPlaneOrigin + debugPlaneRight * debugDrawPlaneSize);
+            Gizmos.DrawLine(debugPlaneOrigin - debugPlaneUp * debugDrawPlaneSize, debugPlaneOrigin + debugPlaneUp * debugDrawPlaneSize);
+        }
+
+        if (hasDebugPoint)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(debugPoint, debugDrawPointRadius);
+        }
     }
 }

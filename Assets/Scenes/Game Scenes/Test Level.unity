@@ -1154,7 +1154,7 @@ PrefabInstance:
     - target: {fileID: 3958707385712163288, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
       propertyPath: targetCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1586232556}
     - target: {fileID: 7958760429828361537, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
       propertyPath: m_Name
       value: Patrol_Enemy

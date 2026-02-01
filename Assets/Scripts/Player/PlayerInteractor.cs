@@ -57,6 +57,10 @@ public class PlayerInteractor : MonoBehaviour
 
     private void HandleKeyInput()
     {
+        var minigame = MinigameManager.Instance;
+        if (minigame != null && minigame.HasActiveMinigame)
+            return;
+
         var target = FindClosestEnemyWithMask();
         if (target == null)
             return;
@@ -88,20 +92,23 @@ public class PlayerInteractor : MonoBehaviour
 
         Vector2 pointer = pointerPositionAction.action.ReadValue<Vector2>();
         var ray = mainCamera.ScreenPointToRay(new Vector3(pointer.x, pointer.y, 0f));
-        if (!Physics.Raycast(ray, out var hit, maxRaycastDistance, raycastMask))
-            return;
-
         var manager = MinigameManager.Instance;
         if (manager != null && manager.HasActiveMinigame)
         {
+            if (!manager.TryGetPointerWorldPoint(ray, out var worldPoint))
+                return;
+
             if (down)
-                manager.HandlePointerDown(hit.point);
+                manager.HandlePointerDown(worldPoint);
             if (held)
-                manager.HandlePointerDrag(hit.point);
+                manager.HandlePointerDrag(worldPoint);
             if (up)
-                manager.HandlePointerUp(hit.point);
+                manager.HandlePointerUp(worldPoint);
             return;
         }
+
+        if (!Physics.Raycast(ray, out var hit, maxRaycastDistance, raycastMask))
+            return;
 
         if (!down)
             return;
