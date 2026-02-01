@@ -5,6 +5,28 @@ using UnityEngine.InputSystem;
 
 public class Hands : MonoBehaviour
 {
+    public enum HandPose
+    {
+        Idle,
+        Reach,
+        Grab,
+        Flip,
+        Rock,
+        ThumbDown,
+        ThumbUp
+    }
+
+    [System.Serializable]
+    public struct HandSpriteSet
+    {
+        public Sprite idle;
+        public Sprite reach;
+        public Sprite grab;
+        public Sprite flip;
+        public Sprite rock;
+        public Sprite thumbDown;
+        public Sprite thumbUp;
+    }
     [Header("Speeds")]
     public float moveToOptionSpeed = 16f;
     public float returnSpeed = 8f;
@@ -25,6 +47,12 @@ public class Hands : MonoBehaviour
 
     public Transform leftReadyPos;
     public Transform rightReadyPos;
+
+    [Header("Hand Sprites")]
+    public SpriteRenderer leftRenderer;
+    public SpriteRenderer rightRenderer;
+    public HandSpriteSet leftSprites;
+    public HandSpriteSet rightSprites;
 
     private Vector3 leftOriginPos;
     private Vector3 rightOriginPos;
@@ -55,6 +83,10 @@ public class Hands : MonoBehaviour
     private Vector3 rightCursorWorld;
     private bool rightCursorHasTarget;
     private Quaternion leftExternalRotation;
+    private HandPose leftBasePose = HandPose.Idle;
+    private HandPose rightBasePose = HandPose.Idle;
+    private bool gestureActive;
+    private HandPose gesturePose = HandPose.Idle;
 
     private Coroutine leftRoutine;
     private Coroutine rightRoutine;
@@ -75,6 +107,14 @@ public class Hands : MonoBehaviour
 
         leftLocalTargetRot = leftOriginRot;
         rightLocalTargetRot = rightOriginRot;
+
+        if (leftRenderer == null && leftHand != null)
+            leftRenderer = leftHand.GetComponentInChildren<SpriteRenderer>();
+        if (rightRenderer == null && rightHand != null)
+            rightRenderer = rightHand.GetComponentInChildren<SpriteRenderer>();
+
+        SetBasePose(true, HandPose.Idle);
+        SetBasePose(false, HandPose.Idle);
     }
 
     private void Update()
@@ -241,6 +281,8 @@ public class Hands : MonoBehaviour
         if (isLeft) leftImpulseActive = true;
         else rightImpulseActive = true;
 
+        SetBasePose(isLeft, HandPose.Reach);
+
         Transform originalParent = hand.parent;
         Quaternion fixedRotation = hand.rotation;
         hand.SetParent(null, true);
@@ -260,8 +302,10 @@ public class Hands : MonoBehaviour
         }
 
         hand.rotation = fixedRotation;
+        SetBasePose(isLeft, HandPose.Grab);
         RestoreHandParent(hand, originalParent);
         SetReturnTargets(isLeft);
+        SetBasePose(isLeft, HandPose.Idle);
 
         if (isLeft) leftImpulseActive = false;
         else rightImpulseActive = false;
@@ -353,6 +397,8 @@ public class Hands : MonoBehaviour
         if (isLeft) leftImpulseActive = true;
         else rightImpulseActive = true;
 
+        SetBasePose(isLeft, HandPose.Reach);
+
         Transform originalParent = hand.parent;
         Quaternion fixedRotation = hand.rotation;
         hand.SetParent(null, true);
@@ -371,6 +417,7 @@ public class Hands : MonoBehaviour
         }
 
         hand.rotation = fixedRotation;
+        SetBasePose(isLeft, HandPose.Grab);
         GameObject clone = SpawnMaskClone(visual);
         if (clone != null)
             clone.transform.SetParent(hand, true);
@@ -391,6 +438,7 @@ public class Hands : MonoBehaviour
 
         RestoreHandParent(hand, originalParent);
         SetReturnTargets(isLeft);
+        SetBasePose(isLeft, HandPose.Idle);
 
         if (isLeft) leftImpulseActive = false;
         else rightImpulseActive = false;
@@ -469,6 +517,88 @@ public class Hands : MonoBehaviour
 
         hand.localPosition = originalParent.InverseTransformPoint(hand.position);
         hand.localRotation = Quaternion.Inverse(originalParent.rotation) * hand.rotation;
+    }
+
+    // ---------- HAND POSE ----------
+
+    public void OnGestureFlip(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.Flip);
+    }
+
+    public void OnGestureRock(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.Rock);
+    }
+
+    public void OnGestureThumbDown(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.ThumbDown);
+    }
+
+    public void OnGestureThumbUp(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.ThumbUp);
+    }
+
+    private void HandleGestureInput(InputAction.CallbackContext context, HandPose pose)
+    {
+        if (context.started || context.performed)
+        {
+            SetGesturePose(pose);
+            return;
+        }
+
+        if (context.canceled && gesturePose == pose)
+            ClearGesturePose();
+    }
+
+    private void SetGesturePose(HandPose pose)
+    {
+        gestureActive = true;
+        gesturePose = pose;
+        ApplyPose(true, pose);
+        ApplyPose(false, pose);
+    }
+
+    private void ClearGesturePose()
+    {
+        gestureActive = false;
+        ApplyPose(true, leftBasePose);
+        ApplyPose(false, rightBasePose);
+    }
+
+    private void SetBasePose(bool isLeft, HandPose pose)
+    {
+        if (isLeft)
+            leftBasePose = pose;
+        else
+            rightBasePose = pose;
+
+        if (!gestureActive)
+            ApplyPose(isLeft, pose);
+    }
+
+    private void ApplyPose(bool isLeft, HandPose pose)
+    {
+        var renderer = isLeft ? leftRenderer : rightRenderer;
+        if (renderer == null)
+            return;
+
+        var set = isLeft ? leftSprites : rightSprites;
+        Sprite sprite = pose switch
+        {
+            HandPose.Reach => set.reach,
+            HandPose.Grab => set.grab,
+            HandPose.Flip => set.flip,
+            HandPose.Rock => set.rock,
+            HandPose.ThumbDown => set.thumbDown,
+            HandPose.ThumbUp => set.thumbUp,
+            _ => set.idle
+        };
+
+        if (sprite != null)
+            renderer.sprite = sprite;
     }
 
     private void SetReturnTargets(bool isLeft)

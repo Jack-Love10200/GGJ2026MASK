@@ -621,6 +621,70 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3900220368272333729}
+        m_TargetAssemblyTypeName: Hands, Assembly-CSharp
+        m_MethodName: OnGestureFlip
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 87773844-1152-4e1c-ba7e-c0ffcb3c8795
+    m_ActionName: 'Player/FlipHand[/Keyboard/q]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3900220368272333729}
+        m_TargetAssemblyTypeName: Hands, Assembly-CSharp
+        m_MethodName: OnGestureRock
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 66556121-0d0d-45f8-97b8-0a6ea23cc2f9
+    m_ActionName: 'Player/RockHand[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3900220368272333729}
+        m_TargetAssemblyTypeName: Hands, Assembly-CSharp
+        m_MethodName: OnGestureThumbUp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: fb92d607-f6c5-4b93-8796-729af22a08f0
+    m_ActionName: 'Player/ThumbsUp[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3900220368272333729}
+        m_TargetAssemblyTypeName: Hands, Assembly-CSharp
+        m_MethodName: OnGestureThumbDown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 656bb4d8-260e-4bc9-ad9d-bbd86cb7fb02
+    m_ActionName: 'Player/ThumbsDown[/Keyboard/r]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -652,6 +716,24 @@ MonoBehaviour:
   rightHand: {fileID: 814333044435726288}
   leftReadyPos: {fileID: 7380875468726374765}
   rightReadyPos: {fileID: 2813498777690391339}
+  leftRenderer: {fileID: 2997496222933699033}
+  rightRenderer: {fileID: 7809337676440351328}
+  leftSprites:
+    idle: {fileID: 21300000, guid: cd4cf31cc400ffb4e9b0b8ef80dc434d, type: 3}
+    reach: {fileID: 21300000, guid: a28a981203539e74686d4e6f30636809, type: 3}
+    grab: {fileID: 21300000, guid: 0d98338a95ae8ce4cac6e771533e896b, type: 3}
+    flip: {fileID: 21300000, guid: 42b0ecadf58d87c4890658c57ecf6ad3, type: 3}
+    rock: {fileID: 21300000, guid: 826c45de54f076b4d99d5d12fce8e889, type: 3}
+    thumbDown: {fileID: 21300000, guid: f71d5d077bc24854fba47f26eaec1f4a, type: 3}
+    thumbUp: {fileID: 21300000, guid: ad4f820a253d31b4bb5c96f64c86746b, type: 3}
+  rightSprites:
+    idle: {fileID: 21300000, guid: b33d632f7320d8244b2a0b3410bb3bb3, type: 3}
+    reach: {fileID: 21300000, guid: d58ac666212c05749ababbe3a0987ddb, type: 3}
+    grab: {fileID: 21300000, guid: 411d80987f383dc49912e71ef724939b, type: 3}
+    flip: {fileID: 21300000, guid: 5620c5d1130f8c043b1afce114a15bf8, type: 3}
+    rock: {fileID: 21300000, guid: fb39f9777ec344b4586012f2dba6245d, type: 3}
+    thumbDown: {fileID: 21300000, guid: aaf30608896a504468bb1c61d73478ad, type: 3}
+    thumbUp: {fileID: 21300000, guid: da2a2b902b045844190dfdd8db1db9b4, type: 3}
 --- !u!1 &8230174688869759229
 GameObject:
   m_ObjectHideFlags: 0
