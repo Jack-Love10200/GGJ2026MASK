@@ -195,7 +195,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 820815985580576051, guid: e686a3c7e9868e04ba0bf4b940724035, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.26
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 820815985580576051, guid: e686a3c7e9868e04ba0bf4b940724035, type: 3}
       propertyPath: m_LocalPosition.z
@@ -228,6 +228,10 @@ PrefabInstance:
     - target: {fileID: 820815985580576051, guid: e686a3c7e9868e04ba0bf4b940724035, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3941142473749425759, guid: e686a3c7e9868e04ba0bf4b940724035, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.01
       objectReference: {fileID: 0}
     - target: {fileID: 7694599089582009962, guid: e686a3c7e9868e04ba0bf4b940724035, type: 3}
       propertyPath: m_Name
@@ -1159,6 +1163,30 @@ PrefabInstance:
       propertyPath: targetCamera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4199409004674582775, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
+      propertyPath: upAction
+      value: 
+      objectReference: {fileID: -9095361812574012677, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
+    - target: {fileID: 4199409004674582775, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
+      propertyPath: downAction
+      value: 
+      objectReference: {fileID: -7381358581314511661, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
+    - target: {fileID: 4199409004674582775, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
+      propertyPath: leftAction
+      value: 
+      objectReference: {fileID: 2319464449581155320, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
+    - target: {fileID: 4199409004674582775, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
+      propertyPath: clickAction
+      value: 
+      objectReference: {fileID: 3001919216989983466, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
+    - target: {fileID: 4199409004674582775, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
+      propertyPath: rightAction
+      value: 
+      objectReference: {fileID: -6359499368423187494, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
+    - target: {fileID: 4199409004674582775, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
+      propertyPath: pointerPositionAction
+      value: 
+      objectReference: {fileID: -845062020058092240, guid: e6edaec7783d9b44d8a4f66b4ffb76e7, type: 3}
     - target: {fileID: 7958760429828361537, guid: 84090dbd3711c0c428f0894d064fdaf3, type: 3}
       propertyPath: m_Name
       value: Patrol_Enemy
