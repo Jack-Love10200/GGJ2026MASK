@@ -158,7 +158,6 @@ GameObject:
   - component: {fileID: 8908153792761347279}
   - component: {fileID: 3958707385712163288}
   - component: {fileID: 697999867404480878}
-  - component: {fileID: 4199409004674582775}
   m_Layer: 0
   m_Name: Patrol_Enemy
   m_TagString: Untagged
@@ -263,31 +262,3 @@ MonoBehaviour:
   perLayerZOffset: 0
   deterministicJitter: 1
   seedOverride: 0
---- !u!114 &4199409004674582775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7958760429828361537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2fc7b0c176bf404385a099a61568929, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractor
-  mainCamera: {fileID: 0}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  requireProximityForClick: 1
-  targetBox: {fileID: 0}
-  leftAction: {fileID: 0}
-  rightAction: {fileID: 0}
-  upAction: {fileID: 0}
-  downAction: {fileID: 0}
-  clickAction: {fileID: 0}
-  pointerPositionAction: {fileID: 0}
-  raycastMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  maxRaycastDistance: 200
