@@ -8,6 +8,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform faceSocket;
     [SerializeField] private SpriteRenderer bodyRenderer;
+    [SerializeField] private Transform indicatorSocket;
 
     [Header("Initial Masks (Bottom -> Top)")]
     [SerializeField] private List<MaskDef> initialMasksBottomToTop = new List<MaskDef>();
@@ -15,6 +16,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [Header("Sorting")]
     [SerializeField] private int baseSortingOrder = 5;
     [SerializeField] private string sortingLayerName = "";
+    [SerializeField] private int indicatorSortingOffset = 10;
 
     [Header("Jitter")]
     [SerializeField] private Vector2 positionJitter = new Vector2(0.02f, 0.02f);
@@ -29,6 +31,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     private readonly List<MaskLayer> layers = new List<MaskLayer>();
     private ComboManager comboManager;
     private NavMeshAgent cachedAgent;
+    private SpriteRenderer indicatorRenderer;
 
     private struct MaskLayer
     {
@@ -95,6 +98,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
             return false;
 
         RemoveTopLayer();
+        RefreshIndicator();
 
         // Track killing
         comboManager?.TrackEnemyFinished(1);
@@ -115,6 +119,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     {
         ClearRuntimeLayers();
         BuildFromInitial();
+        RefreshIndicator();
     }
 
     public void AddMask(MaskDef def)
@@ -128,6 +133,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
         int baseSeed = GetBaseSeed();
         int index = layers.Count == 0 ? 0 : layers[layers.Count - 1].layerIndex + 1;
         TryCreateLayer(def, index, baseSeed);
+        RefreshIndicator();
     }
 
     private void Awake()
@@ -139,12 +145,15 @@ public class EnemyMaskStackVisual : MonoBehaviour
             return;
         }
 
+        EnsureIndicator();
+
         if (LevelScopeManagers.Instance != null)
             comboManager = LevelScopeManagers.Instance.GetComponent<ComboManager>();
 
         cachedAgent = GetComponentInParent<NavMeshAgent>();
 
         BuildFromInitial();
+        RefreshIndicator();
     }
 
     private void OnDisable()
@@ -173,11 +182,13 @@ public class EnemyMaskStackVisual : MonoBehaviour
 
             TryCreateLayer(def, i, baseSeed);
         }
+
+        RefreshIndicator();
     }
 
     private bool TryCreateLayer(MaskDef def, int index, int baseSeed)
     {
-        if (def.icon == null)
+        if (def.maskSprite == null)
         {
             Debug.LogWarning($"{nameof(EnemyMaskStackVisual)}: Mask icon is null at index {index}.", this);
             return false;
@@ -187,7 +198,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
         root.transform.SetParent(faceSocket, false);
 
         var spriteRenderer = root.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = def.icon;
+        spriteRenderer.sprite = def.maskSprite;
 
         if (bodyRenderer != null)
         {
@@ -281,11 +292,93 @@ public class EnemyMaskStackVisual : MonoBehaviour
         }
 
         layers.Clear();
+        RefreshIndicator();
     }
 
     private bool EnsureFaceSocket()
     {
         return faceSocket != null;
+    }
+
+    private void RefreshIndicator()
+    {
+        if (!EnsureIndicator())
+            return;
+
+        if (layers.Count == 0)
+        {
+            indicatorRenderer.enabled = false;
+            return;
+        }
+
+        var top = layers[layers.Count - 1];
+        if (top.def == null)
+        {
+            indicatorRenderer.enabled = false;
+            return;
+        }
+
+        var sprite = top.def.indicatorSprite;
+        if (sprite == null)
+        {
+            indicatorRenderer.enabled = false;
+            return;
+        }
+
+        indicatorRenderer.sprite = sprite;
+        indicatorRenderer.enabled = true;
+        ApplyIndicatorSorting();
+    }
+
+    private bool EnsureIndicator()
+    {
+        if (indicatorSocket == null)
+            indicatorSocket = FindSocketByName("ArrowIndicatorSocket");
+
+        if (indicatorSocket == null)
+            return false;
+
+        if (indicatorRenderer == null)
+        {
+            indicatorRenderer = indicatorSocket.GetComponent<SpriteRenderer>();
+            if (indicatorRenderer == null)
+                indicatorRenderer = indicatorSocket.gameObject.AddComponent<SpriteRenderer>();
+        }
+
+        return indicatorRenderer != null;
+    }
+
+    private Transform FindSocketByName(string socketName)
+    {
+        if (string.IsNullOrWhiteSpace(socketName))
+            return null;
+
+        var transforms = GetComponentsInChildren<Transform>(true);
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            if (transforms[i].name == socketName)
+                return transforms[i];
+        }
+
+        return null;
+    }
+
+    private void ApplyIndicatorSorting()
+    {
+        if (indicatorRenderer == null)
+            return;
+
+        if (bodyRenderer != null)
+        {
+            indicatorRenderer.sortingLayerID = bodyRenderer.sortingLayerID;
+        }
+        else if (!string.IsNullOrWhiteSpace(sortingLayerName))
+        {
+            indicatorRenderer.sortingLayerName = sortingLayerName;
+        }
+
+        int order = baseSortingOrder + layers.Count + indicatorSortingOffset;
+        indicatorRenderer.sortingOrder = order;
     }
 
     private int GetBaseSeed()

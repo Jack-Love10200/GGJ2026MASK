@@ -15,5 +15,5 @@ MonoBehaviour:
   minigameId: tictactoe
   allowClick: 0
   allowKey: 1
-  requiredKey: 0
+  requiredKey: 32
   debugInteractions: 1
