@@ -54,15 +54,24 @@ public class Player : MonoBehaviour
     }
     else if (currentState == MovementState.Turning)
     {
-      currentTurn.timeInTurn += Time.deltaTime;
+
 
       if (currentTurn.timeInTurn > TurnTime)
+      {
+        // Make sure end result is exactly accurate
+        transform.position = Vector3.Lerp(currentTurn.startPosition, currentTurn.endPosition, currentTurn.timeInTurn / TurnTime);
+        transform.rotation = Quaternion.Slerp(currentTurn.startRotation, currentTurn.endRotation, 1.0f);
+
         currentState = MovementState.Moving;
 
-      //lerp postion and rotation to the target
+      }
+
+            //lerp postion and rotation to the target
       transform.position = Vector3.Lerp(currentTurn.startPosition, currentTurn.endPosition, currentTurn.timeInTurn / TurnTime);
       transform.rotation = Quaternion.Slerp(currentTurn.startRotation, currentTurn.endRotation, currentTurn.timeInTurn / TurnTime);
-    }
+
+            currentTurn.timeInTurn += Time.deltaTime;
+        }
   }
 
   void OnTriggerEnter(Collider other)
