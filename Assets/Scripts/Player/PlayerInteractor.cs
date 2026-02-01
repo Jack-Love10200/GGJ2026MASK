@@ -18,6 +18,7 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField] private InputActionReference pointerPositionAction;
     [SerializeField] private LayerMask raycastMask = ~0;
     [SerializeField] private float maxRaycastDistance = 200f;
+    [SerializeField] private bool debugInteractions = false;
 
     private GameStateManager gsm;
 
@@ -84,19 +85,27 @@ public class PlayerInteractor : MonoBehaviour
         if (!down && !held && !up)
             return;
 
-        if (mainCamera == null)
-            mainCamera = Camera.main;
-
-        if (mainCamera == null)
-            return;
-
-        Vector2 pointer = pointerPositionAction.action.ReadValue<Vector2>();
-        var ray = mainCamera.ScreenPointToRay(new Vector3(pointer.x, pointer.y, 0f));
         var manager = MinigameManager.Instance;
         if (manager != null && manager.HasActiveMinigame)
         {
-            if (!manager.TryGetPointerWorldPoint(ray, out var worldPoint))
+            if (mainCamera == null)
+                mainCamera = Camera.main;
+
+            if (mainCamera == null)
+            {
+                if (debugInteractions && down)
+                    Debug.Log($"{nameof(PlayerInteractor)}: No main camera for minigame pointer input.", this);
                 return;
+            }
+
+            Vector2 pointer = pointerPositionAction.action.ReadValue<Vector2>();
+            var ray = mainCamera.ScreenPointToRay(new Vector3(pointer.x, pointer.y, 0f));
+            if (!manager.TryGetPointerWorldPoint(ray, out var worldPoint))
+            {
+                if (debugInteractions && down)
+                    Debug.Log($"{nameof(PlayerInteractor)}: Minigame pointer ray did not hit plane.", this);
+                return;
+            }
 
             if (down)
                 manager.HandlePointerDown(worldPoint);
@@ -107,20 +116,62 @@ public class PlayerInteractor : MonoBehaviour
             return;
         }
 
-        if (!Physics.Raycast(ray, out var hit, maxRaycastDistance, raycastMask))
-            return;
-
         if (!down)
-            return;
-
-        var target = hit.collider.GetComponentInParent<EnemyMaskStackVisual>();
-        if (target == null)
             return;
 
         if (requireProximityForClick)
         {
-            if (!IsInsideTargetBox(target.transform.position))
+            if (debugInteractions && down)
+                Debug.Log($"{nameof(PlayerInteractor)}: Using targetBox overlap for click.", this);
+
+            var overlapTarget = FindClosestEnemyWithMask();
+            if (overlapTarget == null)
+            {
+                if (debugInteractions)
+                    Debug.Log($"{nameof(PlayerInteractor)}: No enemy in targetBox for click.", this);
                 return;
+            }
+
+            var clickedCollider = overlapTarget.GetComponentInChildren<Collider>();
+            var overlapEvent = new InteractionEvent
+            {
+                type = InteractionType.Click,
+                worldPoint = overlapTarget.transform.position,
+                clickedObject = clickedCollider != null ? clickedCollider.gameObject : overlapTarget.gameObject
+            };
+
+            if (debugInteractions)
+                Debug.Log($"{nameof(PlayerInteractor)}: Click (overlap) -> {overlapTarget.name}", overlapTarget);
+            overlapTarget.TryHandleInteraction(overlapEvent, this);
+            return;
+        }
+
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
+        if (mainCamera == null)
+        {
+            if (debugInteractions && down)
+                Debug.Log($"{nameof(PlayerInteractor)}: No main camera for pointer input.", this);
+            return;
+        }
+
+        Vector2 pointerRay = pointerPositionAction.action.ReadValue<Vector2>();
+        var raycastRay = mainCamera.ScreenPointToRay(new Vector3(pointerRay.x, pointerRay.y, 0f));
+
+        if (!Physics.Raycast(raycastRay, out var hit, maxRaycastDistance, raycastMask))
+        {
+            if (debugInteractions && down)
+                Debug.Log($"{nameof(PlayerInteractor)}: Raycast miss. Mask={raycastMask.value} Dist={maxRaycastDistance}", this);
+            return;
+        }
+
+        var target = hit.collider.GetComponentInParent<EnemyMaskStackVisual>();
+        if (target == null)
+        {
+            if (debugInteractions)
+                Debug.Log($"{nameof(PlayerInteractor)}: Hit {hit.collider.name} but no EnemyMaskStackVisual in parents.", hit.collider);
+            return;
         }
 
         var evt = new InteractionEvent
@@ -130,6 +181,8 @@ public class PlayerInteractor : MonoBehaviour
             clickedObject = hit.collider.gameObject
         };
 
+        if (debugInteractions)
+            Debug.Log($"{nameof(PlayerInteractor)}: Click interaction -> {target.name}", target);
         target.TryHandleInteraction(evt, this);
     }
 

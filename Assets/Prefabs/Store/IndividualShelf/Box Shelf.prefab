@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &9145654816895434114
+--- !u!1 &582871046860546776
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4686674909278205954}
-  - component: {fileID: 1742203248009374325}
-  - component: {fileID: 1078240062113007403}
+  - component: {fileID: 3619709817155350049}
+  - component: {fileID: 3391234708449894311}
+  - component: {fileID: 2243100337043348220}
   m_Layer: 0
-  m_Name: Empty Shelf
+  m_Name: Box Shelf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4686674909278205954
+--- !u!4 &3619709817155350049
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9145654816895434114}
+  m_GameObject: {fileID: 582871046860546776}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.0473, y: -0, z: 1.91755}
@@ -33,13 +33,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1742203248009374325
+--- !u!65 &3391234708449894311
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9145654816895434114}
+  m_GameObject: {fileID: 582871046860546776}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -52,19 +52,21 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 1, z: 1}
+  m_Size: {x: 3.3, y: 1, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1078240062113007403
+--- !u!114 &2243100337043348220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9145654816895434114}
+  m_GameObject: {fileID: 582871046860546776}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03ef0a2e50be001498cf7f04a7d39f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  propPrefabs: []
-  propCount: 40
+  propPrefabs:
+  - {fileID: -3957782524123411102, guid: 2e151cd308cf61e4e8dce4ce56e6e14f, type: 3}
+  - {fileID: -344004081357383697, guid: 2e151cd308cf61e4e8dce4ce56e6e14f, type: 3}
+  PropCount: 5

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3258229295358930410}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FaceSocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 601066635421145664}
   - component: {fileID: 201114372834654473}
   - component: {fileID: 7223300975407492904}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,9 +158,7 @@ GameObject:
   - component: {fileID: 8908153792761347279}
   - component: {fileID: 3958707385712163288}
   - component: {fileID: 697999867404480878}
-  - component: {fileID: 4199409004674582775}
-  - component: {fileID: 3397406715795709540}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Patrol_Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}

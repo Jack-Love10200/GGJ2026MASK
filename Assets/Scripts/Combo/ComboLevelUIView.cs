@@ -1,11 +1,16 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ComboUIView : MonoBehaviour
 {
+    [Header("UI Elements")]
+    public Image comboLevelSprite;
+    public TextMeshProUGUI comboLevelLabel;
+    public TextMeshProUGUI comboValueLabel;
+
     ComboManager mComboManagerRef;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mComboManagerRef = LevelScopeManagers.Instance.GetComponent<ComboManager>();
@@ -18,10 +23,10 @@ public class ComboUIView : MonoBehaviour
         {
             // Subscribe to the changing of the combo level
             mComboManagerRef.mOnComboLevelChanged += UpdateComboLevelVisuals;
+            mComboManagerRef.mOnComboValueChanged += UpdateComboValueVisuals;
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -29,6 +34,14 @@ public class ComboUIView : MonoBehaviour
 
     void UpdateComboLevelVisuals()
     {
-        GetComponent<TextMeshProUGUI>().SetText(mComboManagerRef.GetCurrentComboLevelName());
+        comboLevelSprite.sprite = mComboManagerRef.GetCurrentComboSprite();
+        comboLevelLabel.text = mComboManagerRef.GetCurrentComboLevelName();
+
+
+    }
+
+    void UpdateComboValueVisuals()
+    {
+        comboValueLabel.text = mComboManagerRef.GetCurrentComboValue().ToString();
     }
 }
