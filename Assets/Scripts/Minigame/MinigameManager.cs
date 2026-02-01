@@ -135,6 +135,7 @@ public class MinigameManager : MonoBehaviour
         }
 
         SetPlayerMinigamePaused(activeContext, true);
+        SetHandsMinigameMode(activeContext, true);
         BeginCursorOverride();
         BeginCameraFocus(anchorToUse);
         activeMinigame.Begin(activeContext);
@@ -229,6 +230,7 @@ public class MinigameManager : MonoBehaviour
         if (stoppedAgent && activeContext != null && activeContext.agentToStop != null)
             activeContext.agentToStop.isStopped = false;
 
+        SetHandsMinigameMode(activeContext, false);
         SetPlayerMinigamePaused(activeContext, false);
         RestoreCursorOverride();
         RestoreCameraFocus();
@@ -242,6 +244,26 @@ public class MinigameManager : MonoBehaviour
             Destroy(activeInstance);
 
         activeInstance = null;
+    }
+
+    private void SetHandsMinigameMode(MinigameContext ctx, bool active)
+    {
+        if (ctx == null || ctx.player == null)
+            return;
+
+        var hands = ctx.player.GetComponentInChildren<Hands>(true);
+        if (hands == null)
+            return;
+
+        if (active)
+        {
+            Transform socket = ctx.enemy != null ? ctx.enemy.GetLeftShoulderSocket() : null;
+            hands.EnterMinigameMode(socket);
+        }
+        else
+        {
+            hands.ExitMinigameMode();
+        }
     }
 
     private void SetPlayerMinigamePaused(MinigameContext ctx, bool paused)

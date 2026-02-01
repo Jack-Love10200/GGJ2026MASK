@@ -106,15 +106,13 @@ public class PlayerInteractor : MonoBehaviour
 
     private void HandlePointerInput()
     {
-        if (clickActionRuntime == null || pointerPositionActionRuntime == null)
+        if (pointerPositionActionRuntime == null)
             return;
 
-        bool down = clickActionRuntime.WasPressedThisFrame();
-        bool up = clickActionRuntime.WasReleasedThisFrame();
-        bool held = clickActionRuntime.ReadValue<float>() > 0f;
-
-        if (!down && !held && !up)
-            return;
+        bool down = clickActionRuntime != null && clickActionRuntime.WasPressedThisFrame();
+        bool up = clickActionRuntime != null && clickActionRuntime.WasReleasedThisFrame();
+        bool held = clickActionRuntime != null && clickActionRuntime.ReadValue<float>() > 0f;
+        bool hasClickInput = down || held || up;
 
         var manager = MinigameManager.Instance;
         if (manager != null && manager.HasActiveMinigame)
@@ -138,6 +136,13 @@ public class PlayerInteractor : MonoBehaviour
                 return;
             }
 
+            var hands = GetComponentInChildren<Hands>();
+            if (hands != null)
+                hands.SetRightCursorWorld(worldPoint);
+
+            if (!hasClickInput)
+                return;
+
             if (down)
                 manager.HandlePointerDown(worldPoint);
             if (held)
@@ -146,6 +151,9 @@ public class PlayerInteractor : MonoBehaviour
                 manager.HandlePointerUp(worldPoint);
             return;
         }
+
+        if (clickActionRuntime == null)
+            return;
 
         if (!down)
             return;
