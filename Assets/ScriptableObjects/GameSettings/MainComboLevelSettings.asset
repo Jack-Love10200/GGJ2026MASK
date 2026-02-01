@@ -29,11 +29,11 @@ MonoBehaviour:
   - 2000
   - 5000
   mComboLevelSprites:
-  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
-  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
-  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
-  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
-  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
-  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
-  - {fileID: 21300000, guid: c1fd2ac0d7f0337468594bff6712fce1, type: 3}
+  - {fileID: -946093122, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
+  - {fileID: -1042467680, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
+  - {fileID: -1581187108, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
+  - {fileID: 1752509719, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
+  - {fileID: -392070902, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
+  - {fileID: 1477120443, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
+  - {fileID: 1417908580, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
   mComboValueVisualScalar: 1
