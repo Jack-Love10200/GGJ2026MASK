@@ -33,7 +33,7 @@ public class GameTimer : MonoBehaviour
     void Update()
     {
         // only lower the timer if the game is running
-        if (gsm.currentState != GameState.Playing)
+        if (gsm.CurrentState != GameState.Playing)
             return;
 
         currentTime -= Time.deltaTime;
@@ -44,7 +44,7 @@ public class GameTimer : MonoBehaviour
             GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
             Instantiate(loseScreenPrefab, canvas.transform);
             currentTime = 0.0;
-            gsm.currentState = GameState.GameOver;
+            gsm.CurrentState = GameState.GameOver;
         }
 
         if (debugText)
