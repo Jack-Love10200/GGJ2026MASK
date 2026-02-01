@@ -380,6 +380,30 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: ce3eb45e-684a-44d0-91e9-0dd9092ab4d1
     m_ActionName: 'Player/MoveForward[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bc6c965e-8d4f-4269-b79b-28de8ea668ae
+    m_ActionName: 'Player/LeftArrow[/Keyboard/leftArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f4a17e81-4afd-4555-879b-7543e11e9d13
+    m_ActionName: 'Player/RightArrow[/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 14b6589a-9ef5-4123-b3b8-3d586a0fee52
+    m_ActionName: 'Player/UpArrow[/Keyboard/upArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fcd4c373-7ca1-4c31-b756-6dc813114917
+    m_ActionName: 'Player/DownArrow[/Keyboard/downArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5fbb63f5-1bb1-4a72-87f5-53da8d84d498
+    m_ActionName: 'Player/LeftClick[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 74eb3c9b-a308-459a-87fb-a15bb48ab65d
+    m_ActionName: 'Player/PointerPositionDelta[/Mouse/delta]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player

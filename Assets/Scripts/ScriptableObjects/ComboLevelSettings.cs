@@ -9,6 +9,8 @@ public class ComboLevelSettings : ScriptableObject
 
     public List<float> mComboLevelThresholds;
 
+    public List<Sprite> mComboLevelSprites;
+
     public float mComboValueVisualScalar = 1.0f; // This is a multiplier on what the combo value is, which can let the actually seen combo value seem greater
 
 }
