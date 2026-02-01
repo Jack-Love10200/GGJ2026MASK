@@ -9,6 +9,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [SerializeField] private Transform faceSocket;
     [SerializeField] private SpriteRenderer bodyRenderer;
     [SerializeField] private Transform indicatorSocket;
+    [SerializeField] private Transform leftShoulderSocket;
 
     [Header("Initial Masks (Bottom -> Top)")]
     [SerializeField] private List<MaskDef> initialMasksBottomToTop = new List<MaskDef>();
@@ -42,6 +43,16 @@ public class EnemyMaskStackVisual : MonoBehaviour
         public int layerIndex;
     }
 
+    public struct MaskVisualData
+    {
+        public Sprite sprite;
+        public Vector3 position;
+        public Quaternion rotation;
+        public Vector3 lossyScale;
+        public int sortingLayerID;
+        public int sortingOrder;
+    }
+
     public bool HasMask => layers.Count > 0;
 
     public MaskDef PeekTopMask()
@@ -58,6 +69,49 @@ public class EnemyMaskStackVisual : MonoBehaviour
             return null;
 
         return layers[layers.Count - 1].anchor;
+    }
+
+    public Transform GetLeftShoulderSocket()
+    {
+        if (leftShoulderSocket == null)
+            leftShoulderSocket = FindSocketByName("LeftShoulderSocket");
+
+        return leftShoulderSocket;
+    }
+
+    public bool TryGetTopMaskVisual(out MaskVisualData data)
+    {
+        data = default;
+        if (layers.Count == 0)
+            return false;
+
+        var top = layers[layers.Count - 1];
+        var renderer = top.renderer;
+        var sprite = renderer != null ? renderer.sprite : top.def != null ? top.def.maskSprite : null;
+        if (sprite == null)
+            return false;
+
+        var root = top.root != null ? top.root.transform : faceSocket;
+        if (root == null)
+            root = transform;
+
+        data.sprite = sprite;
+        data.position = root.position;
+        data.rotation = root.rotation;
+        data.lossyScale = root.lossyScale;
+
+        if (renderer != null)
+        {
+            data.sortingLayerID = renderer.sortingLayerID;
+            data.sortingOrder = renderer.sortingOrder;
+        }
+        else if (bodyRenderer != null)
+        {
+            data.sortingLayerID = bodyRenderer.sortingLayerID;
+            data.sortingOrder = bodyRenderer.sortingOrder + 1;
+        }
+
+        return true;
     }
 
     public bool TryHandleInteraction(InteractionEvent evt, PlayerInteractor caller)

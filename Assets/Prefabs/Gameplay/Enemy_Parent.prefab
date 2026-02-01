@@ -241,6 +241,7 @@ MonoBehaviour:
   faceSocket: {fileID: 8069393196697125263}
   bodyRenderer: {fileID: 6746849366139338875}
   indicatorSocket: {fileID: 2201326421344575973}
+  leftShoulderSocket: {fileID: 0}
   initialMasksBottomToTop:
   - {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
   - {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
