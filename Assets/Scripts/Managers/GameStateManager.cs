@@ -13,18 +13,19 @@ public enum GameState
 
 public class GameStateManager : MonoBehaviour
 {
-
-    // public //////////////////////////////
-    public static GameStateManager Instance;
-
     // private /////////////////////////////
-    public GameState currentState = GameState.Playing;
+    public GameState currentState;
+    private GameState initialState;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+        initialState = currentState;
+    }
+
     void Start()
     {
-        currentState = GameState.Playing;
-        Instance = this;
+        currentState = initialState;
     }
 
     // Update is called once per frame
@@ -33,7 +34,7 @@ public class GameStateManager : MonoBehaviour
         
     }
 
-    public void RestartGame()
+    public static void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

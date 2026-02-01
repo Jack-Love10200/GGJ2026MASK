@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5013042917586823732}
   - component: {fileID: -6335171072404699508}
   - component: {fileID: -5435967920585261704}
+  - component: {fileID: 2908682941729869518}
   m_Layer: 0
   m_Name: LevelScopeManagers
   m_TagString: Untagged
@@ -58,3 +59,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ComboManager
   mComboLevelSettings: {fileID: 11400000, guid: 64bf067dddc1b5b448e0554fe415e387, type: 2}
+--- !u!114 &2908682941729869518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4535950531476503485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: affc6348d94b0df41bb5318ed2463820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MinigameManager
+  minigames:
+  - id: Tic Tac Toe
+    prefab: {fileID: 0}
