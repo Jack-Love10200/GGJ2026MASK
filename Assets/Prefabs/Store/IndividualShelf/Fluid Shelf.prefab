@@ -66,9 +66,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03ef0a2e50be001498cf7f04a7d39f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  PropPrefabs:
-  - {fileID: -3403155128824885820, guid: 2e151cd308cf61e4e8dce4ce56e6e14f, type: 3}
+  propPrefabs:
   - {fileID: -2793727289926329592, guid: 2e151cd308cf61e4e8dce4ce56e6e14f, type: 3}
   - {fileID: 9022215874312191456, guid: 2e151cd308cf61e4e8dce4ce56e6e14f, type: 3}
+  - {fileID: -3403155128824885820, guid: 2e151cd308cf61e4e8dce4ce56e6e14f, type: 3}
   - {fileID: -7367559088687387456, guid: 2e151cd308cf61e4e8dce4ce56e6e14f, type: 3}
   PropCount: 5
