@@ -179,7 +179,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
 
   private bool TryCreateLayer(MaskDef def, int index, int baseSeed)
   {
-    if (def.icon == null)
+    if (def.maskSprite == null)
     {
       Debug.LogWarning($"{nameof(EnemyMaskStackVisual)}: Mask icon is null at index {index}.", this);
       return false;
@@ -196,7 +196,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     arrow.transform.localPosition = new Vector3(0, 0, 0.1f);
 
     SpriteRenderer arrowRenderer = arrow.AddComponent<SpriteRenderer>();
-    arrowRenderer.sprite = def.icon;
+    arrowRenderer.sprite = def.indicatorSprite;
     arrowRenderer.material = arrowMaterial;
 
     arrowRenderer.sortingOrder = spriteRenderer.sortingOrder + 1;
