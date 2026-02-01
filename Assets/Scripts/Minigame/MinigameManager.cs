@@ -18,7 +18,7 @@ public class MinigameManager : MonoBehaviour
     [SerializeField] private Camera focusCamera;
     [FormerlySerializedAs("focusWorldOffset")]
     [FormerlySerializedAs("focusLocalOffset")]
-    [SerializeField] private Vector3 focusLocalOffset = new Vector3(0f, 0f, -1.5f);
+    [SerializeField] private Vector3 focusLocalOffset = new Vector3(0f, 0f, 1.5f);
     [SerializeField] private float focusFov = 25f;
     [SerializeField] private bool smoothCameraFocus = true;
     [Tooltip("Seconds to smooth camera focus. 0 = snap.")]
