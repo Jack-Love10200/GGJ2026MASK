@@ -80,7 +80,11 @@ public class ComboManager : MonoBehaviour
             
     }
 
-    
+    public int GetCurrentComboLevel()
+    {
+        return mCurrComboLevel;
+    }
+
     public string GetCurrentComboLevelName()
     {
         if (mComboLevelSettings.mComboLevelNames.Count < mCurrComboLevel)
