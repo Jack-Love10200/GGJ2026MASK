@@ -3,7 +3,7 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     // public ///////////////////////
-    public uint KillQuota = 0;
+    public GameQuotaSettings QuotaSettings;
     public GameObject winScreenPrefab;
 
     // private //////////////////////
@@ -15,7 +15,7 @@ public class ScoreManager : MonoBehaviour
     {
         m_KillCount++;
 
-        if (m_KillCount >= KillQuota)
+        if (m_KillCount >= QuotaSettings.KillTarget)
         {
             gsm.CurrentState = GameState.Win;
 

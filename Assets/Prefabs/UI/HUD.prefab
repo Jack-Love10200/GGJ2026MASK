@@ -427,6 +427,7 @@ MonoBehaviour:
   startTime: 120
   timerLabel: {fileID: 6595873481126835193}
   loseScreenPrefab: {fileID: 7384394563833357035, guid: baffc998d8a37bf45b6449fde0eb6dad, type: 3}
+  gameTimeSettings: {fileID: 11400000, guid: 15015242bf504f247845d4bd098beba2, type: 2}
   currentTime: 0
 --- !u!114 &6595873481126835193
 MonoBehaviour:

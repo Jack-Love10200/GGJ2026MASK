@@ -101,5 +101,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8673f6084c306694ca391db27e7e8a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
-  KillQuota: 5
+  QuotaSettings: {fileID: 11400000, guid: 34e76f1c4e75fb6419f5ae4329ab3f6a, type: 2}
   winScreenPrefab: {fileID: 7384394563833357035, guid: a04f042b9349981418fd7e34121bf8d8, type: 3}
