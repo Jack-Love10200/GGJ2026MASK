@@ -2616,6 +2616,10 @@ PrefabInstance:
       propertyPath: focusCamera
       value: 
       objectReference: {fileID: 110796569}
+    - target: {fileID: 2908682941729869518, guid: 32b679f1f6efceb46996da93a63eafd2, type: 3}
+      propertyPath: debugMinigameFlow
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4535950531476503485, guid: 32b679f1f6efceb46996da93a63eafd2, type: 3}
       propertyPath: m_Name
       value: LevelScopeManagers
