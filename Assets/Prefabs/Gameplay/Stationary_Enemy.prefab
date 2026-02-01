@@ -60,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: eda094b12b024ae41b3fb7c6811be77d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: e3c590e1f2e6f4647831e0a1f9c5c61d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 94c218802c4150d40bcba1ba03b6144e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -156,6 +156,7 @@ GameObject:
   - component: {fileID: 6588795129875982392}
   - component: {fileID: 8262734256943645971}
   - component: {fileID: 7082232222911459080}
+  - component: {fileID: 399133336270910034}
   m_Layer: 3
   m_Name: Stationary_Enemy
   m_TagString: Untagged
@@ -217,3 +218,37 @@ MonoBehaviour:
   perLayerZOffset: 0
   deterministicJitter: 1
   seedOverride: 0
+--- !u!114 &399133336270910034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8187444721295608339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71363e203e1cef04eb939fe8a445df65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpriteController
+  personSprite: {fileID: 6746849366139338875}
+  EnemyShader: {fileID: -6465566751694194690, guid: 9b32d606280a19d44bdb051879c645e3, type: 3}
+  PeopleTextures:
+  - {fileID: 2800000, guid: 94c218802c4150d40bcba1ba03b6144e, type: 3}
+  - {fileID: 2800000, guid: a68e76907eaed3c4db16d9b34a0d4b8d, type: 3}
+  - {fileID: 2800000, guid: b053c7b40ac261a44bedc66b34990456, type: 3}
+  - {fileID: 2800000, guid: 8aaf23ef4d52fd249bbcfadf39ddf6ef, type: 3}
+  ShirtTextures:
+  - {fileID: 2800000, guid: 51f3aae154d387644a2749e032956abb, type: 3}
+  - {fileID: 2800000, guid: 2e1604906b1f57047a19e930ae82d9e3, type: 3}
+  - {fileID: 2800000, guid: e65f6d1630ca35b4a94ebb2ccae35ae3, type: 3}
+  - {fileID: 2800000, guid: 50bbbbb297067e84c8e04f34ce2728e3, type: 3}
+  ShirtColors:
+  - {r: 0.6855345, g: 0.06682872, b: 0.06682872, a: 0}
+  - {r: 0.016067656, g: 0.735849, b: 0.006941857, a: 0}
+  - {r: 0.022427775, g: 0.2643358, b: 0.7924528, a: 0}
+  - {r: 0.81761, g: 0, b: 0.70540905, a: 0}
+  PixelationStrength: 0.76
+  ColorBands: 3.75
+  garbleSpeed: 6.16
+  WaveSpeed: 0.8
+  WaveIntensity: 0.69
