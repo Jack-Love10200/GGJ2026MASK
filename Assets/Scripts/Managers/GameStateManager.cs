@@ -48,8 +48,6 @@ public class GameStateManager : MonoBehaviour
         m_InitialState = m_CurrentState;
     }
 
-
-
     void Start()
     {
         m_CurrentState = m_InitialState;
