@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c8a476b72d38414390e234a1c9d4ae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ComboManager
+  mCurrComboValue: 0
   mComboLevelSettings: {fileID: 11400000, guid: 64bf067dddc1b5b448e0554fe415e387, type: 2}
 --- !u!114 &2908682941729869518
 MonoBehaviour:
@@ -77,10 +78,12 @@ MonoBehaviour:
     prefab: {fileID: 5833809555095692221, guid: 12525e94a766dd349ae16758d8feeaa5, type: 3}
   focusCameraOnMinigame: 1
   focusCamera: {fileID: 0}
-  focusWorldOffset: {x: 0, y: 0, z: -1.5}
+  focusLocalOffset: {x: 0, y: 0, z: -1.5}
   focusFov: 25
   smoothCameraFocus: 1
   focusSmoothTime: 0.25
+  lockFocusRotationOnStart: 1
+  debugMinigameFlow: 0
   showCursorDuringMinigame: 1
   debugDrawMinigameInput: 0
   debugDrawRayLength: 5
@@ -98,5 +101,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8673f6084c306694ca391db27e7e8a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
-  KillQuota: 10
+  KillQuota: 5
   winScreenPrefab: {fileID: 7384394563833357035, guid: a04f042b9349981418fd7e34121bf8d8, type: 3}

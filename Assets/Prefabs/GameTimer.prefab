@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340703b5873c23e46aaf9a4777297d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  startTime: 1
-  debugText: {fileID: 0}
+  startTime: 10
+  timerLabel: {fileID: 0}
   loseScreenPrefab: {fileID: 7384394563833357035, guid: baffc998d8a37bf45b6449fde0eb6dad, type: 3}
+  currentTime: 0
