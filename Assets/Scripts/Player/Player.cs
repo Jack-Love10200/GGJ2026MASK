@@ -173,7 +173,10 @@ public class Player : MonoBehaviour
 
   void OnGameStateSwitch(GameState newGameState)
   {
-    pausedFromGameEnd = true;
+    if (newGameState == GameState.Win || newGameState == GameState.GameOver)
+    {
+            pausedFromGameEnd = true;
+    }
   }
 }
 

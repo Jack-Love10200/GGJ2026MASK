@@ -15,6 +15,8 @@ public class GameTimer : MonoBehaviour
     public double currentTime = 0.0; // is set to the start time at the beginning of the game. decreases as time passes.
     private GameStateManager gameStateManager;
 
+    bool gameOverHandled = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void TimerStart()
     {
@@ -45,13 +47,15 @@ public class GameTimer : MonoBehaviour
 
         currentTime -= Time.deltaTime;
 
-        if (currentTime <= 0.0)
+        if (currentTime <= 0.0 && gameOverHandled == false)
         {
             // end game
             GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
             Instantiate(loseScreenPrefab, canvas.transform);
             currentTime = 0.0;
             gameStateManager.CurrentState = GameState.GameOver;
+
+            gameOverHandled = true;
         }
 
         if (Time.timeScale != 0)
