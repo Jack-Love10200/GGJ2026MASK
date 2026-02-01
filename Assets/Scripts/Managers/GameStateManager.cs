@@ -40,18 +40,15 @@ public class GameStateManager : MonoBehaviour
     // private ////////////////////////////////////////////////////
     [SerializeField]
     private GameState m_CurrentState;
-    private GameState m_InitialState;
     private Action<GameState> m_OnGameStateSwitchEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
-        m_InitialState = m_CurrentState;
     }
 
     void Start()
     {
-        m_CurrentState = m_InitialState;
     }
 
     // Update is called once per frame
@@ -62,7 +59,10 @@ public class GameStateManager : MonoBehaviour
 
     public static void RestartGame()
     {
+        GameStateManager gsm = PersistentScopeManagers.Instance.GetComponent<GameStateManager>();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        gsm.CurrentState = GameState.Playing;
     }
 
 }

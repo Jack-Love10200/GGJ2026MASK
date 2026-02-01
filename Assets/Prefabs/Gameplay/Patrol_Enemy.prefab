@@ -278,7 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpriteController
   personSprite: {fileID: 201114372834654473}
   EnemyShader: {fileID: -6465566751694194690, guid: 9b32d606280a19d44bdb051879c645e3, type: 3}
-  FaceSocket: {fileID: 0}
+  FaceSocket: {fileID: 3258229295358930410}
   PeopleTextures:
   - {fileID: 2800000, guid: 94c218802c4150d40bcba1ba03b6144e, type: 3}
   - {fileID: 2800000, guid: a68e76907eaed3c4db16d9b34a0d4b8d, type: 3}

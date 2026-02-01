@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: TictactoeMinigame
   m_EditorClassIdentifier: Assembly-CSharp::ClickStartMinigameUnlockAction
   minigameId: tictactoe
+  allowClick: 0
+  allowKey: 1
+  requiredKey: 0
   debugInteractions: 1
