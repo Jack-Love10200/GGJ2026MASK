@@ -295,6 +295,24 @@ public class EnemyMaskStackVisual : MonoBehaviour
         RefreshIndicator();
     }
 
+    public void ClearRuntimeLayersNoDestroy()
+    {
+        for (int i = layers.Count - 1; i >= 0; i--)
+        {
+            var layer = layers[i];
+            if (layer.root == null)
+                continue;
+
+            //if (Application.isPlaying)
+            //    Destroy(layer.root);
+            //else
+            //    DestroyImmediate(layer.root);
+        }
+
+        layers.Clear();
+        RefreshIndicator();
+    }
+
     private bool EnsureFaceSocket()
     {
         return faceSocket != null;

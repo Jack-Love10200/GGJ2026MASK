@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Mask
   - JunctionTrigger
+  - Enemy
   layers:
   - Default
   - TransparentFX
