@@ -34,7 +34,7 @@ public class MinigameManager : MonoBehaviour
 
     public static MinigameManager Instance { get; private set; }
 
-    public bool HasActiveMinigame => activeMinigame != null;
+    public bool HasActiveMinigame => activeInstance != null;
     public EnemyMaskStackVisual ActiveEnemy => activeContext != null ? activeContext.enemy : null;
 
     private readonly Dictionary<string, GameObject> minigameLookup = new Dictionary<string, GameObject>();
@@ -325,6 +325,14 @@ public class MinigameManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (activeInstance == null && (activeMinigame != null || activeContext != null || hasCameraFocus || hasCursorOverride))
+        {
+            if (debugMinigameFlow)
+                Debug.Log($"{nameof(MinigameManager)}: Active instance missing, cleaning up.", this);
+            CleanupActive();
+            return;
+        }
+
         if (!hasCameraFocus || !focusCameraOnMinigame || activeContext == null || activeContext.anchor == null)
             return;
 
