@@ -22,7 +22,7 @@ public class ComboManager : MonoBehaviour
 
     private ComboStats mCurrComboStats = new ComboStats();
 
-    float mCurrComboValue = 0.0f;
+    public float mCurrComboValue = 0.0f;
 
     int mCurrComboLevel = -1;
 
@@ -88,6 +88,16 @@ public class ComboManager : MonoBehaviour
             print("ComboMamager: GetCurrentComboLevelName: No combo level of level " + mCurrComboLevel.ToString() +" exists. Need to add more combos");
         }
         return mComboLevelSettings.mComboLevelNames[mCurrComboLevel];
+    }
+
+    public float GetCurrentComboValue()
+    {   
+        return mCurrComboValue;
+    }
+
+    public Sprite GetCurrentComboSprite()
+    {
+        return mComboLevelSettings.mComboLevelSprites[mCurrComboLevel];
     }
     // Private functions
 
