@@ -107,7 +107,11 @@ public class OptionsMenu : MonoBehaviour
 
     private void OnVolumeChanged(string parameterName, float sliderValue)
     {
-        SetVolume(parameterName, sliderValue);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetMixerVolume(parameterName, sliderValue);
+        }
+
         PlayerPrefs.SetFloat(parameterName, sliderValue);
         PlayerPrefs.Save();
     }
