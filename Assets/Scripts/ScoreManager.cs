@@ -4,6 +4,7 @@ public class ScoreManager : MonoBehaviour
 {
     // public ///////////////////////
     public uint KillQuota = 0;
+    public GameObject winScreenPrefab;
 
     // private //////////////////////
     private GameStateManager gsm;
@@ -17,6 +18,8 @@ public class ScoreManager : MonoBehaviour
         if (m_KillCount == KillQuota)
         {
             gsm.CurrentState = GameState.Win;
+
+            SpawnWinScreen();
         }
     }
 
@@ -30,4 +33,14 @@ public class ScoreManager : MonoBehaviour
     {
         
     }
+
+
+    // Helper functions
+    void SpawnWinScreen()
+    {
+        Canvas canvasObj = FindFirstObjectByType<Canvas>();
+        Instantiate(winScreenPrefab, canvasObj.transform);
+
+    }
+
 }

@@ -88,3 +88,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
   KillQuota: 10
+  winScreenPrefab: {fileID: 7384394563833357035, guid: a04f042b9349981418fd7e34121bf8d8, type: 3}
