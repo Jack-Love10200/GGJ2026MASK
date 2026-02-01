@@ -33,6 +33,10 @@ public class SimpleTestMovement : MonoBehaviour
 
     private void Update()
     {
+        var minigame = MinigameManager.Instance;
+        if (minigame != null && minigame.HasActiveMinigame)
+            return;
+
         HandleLook();
         HandleMove();
     }

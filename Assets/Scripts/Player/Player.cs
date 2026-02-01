@@ -110,18 +110,27 @@ public class Player : MonoBehaviour
 
   public void OnMoveForward(InputAction.CallbackContext context)
   {
+    if (MinigameManager.Instance != null && MinigameManager.Instance.HasActiveMinigame)
+      return;
+
     if (context.started)
       desiredDirection = InputDirection.Forward;
   }
 
   public void OnMoveLeft(InputAction.CallbackContext context)
   {
+    if (MinigameManager.Instance != null && MinigameManager.Instance.HasActiveMinigame)
+      return;
+
     if (context.started)
       desiredDirection = InputDirection.Left;
   }
 
   public void OnMoveRight(InputAction.CallbackContext context)
   {
+    if (MinigameManager.Instance != null && MinigameManager.Instance.HasActiveMinigame)
+      return;
+
     if (context.started)
       desiredDirection = InputDirection.Right;
   }

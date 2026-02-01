@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [DisallowMultipleComponent]
 public class EnemyMaskStackVisual : MonoBehaviour
@@ -25,6 +26,8 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [SerializeField] private int seedOverride = 0;
 
     private readonly List<MaskLayer> layers = new List<MaskLayer>();
+    private ComboManager comboManager;
+    private NavMeshAgent cachedAgent;
 
     private struct MaskLayer
     {
@@ -66,7 +69,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
         if (unlockAction == null)
             return false;
 
-        var ctx = new MinigameContext(this, top.anchor, caller);
+        var ctx = new MinigameContext(this, top.anchor, caller, cachedAgent);
         unlockAction.OnInteract(ctx, evt);
         return true;
     }
@@ -77,7 +80,16 @@ public class EnemyMaskStackVisual : MonoBehaviour
             return false;
 
         RemoveTopLayer();
+        comboManager?.TrackEnemyFinished(1);
+        if (layers.Count == 0)
+            HandleAllMasksRemoved();
         return true;
+    }
+
+    private void HandleAllMasksRemoved()
+    {
+        // TODO: play VFX/SFX before destroying the enemy.
+        Destroy(gameObject);
     }
 
     public void ResetToInitial()
@@ -107,6 +119,11 @@ public class EnemyMaskStackVisual : MonoBehaviour
             enabled = false;
             return;
         }
+
+        if (LevelScopeManagers.Instance != null)
+            comboManager = LevelScopeManagers.Instance.GetComponent<ComboManager>();
+
+        cachedAgent = GetComponentInParent<NavMeshAgent>();
 
         BuildFromInitial();
     }

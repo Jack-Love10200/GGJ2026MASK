@@ -546,8 +546,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MinigameManager
   minigames:
-  - id: TicTacToe
-    prefab: {fileID: 0}
+  - id: tictactoe
+    prefab: {fileID: 5833809555095692221, guid: 12525e94a766dd349ae16758d8feeaa5, type: 3}
+  focusCameraOnMinigame: 1
+  focusCamera: {fileID: 1706431840}
+  focusWorldOffset: {x: 0, y: 0, z: -1.5}
+  focusFov: 25
+  showCursorDuringMinigame: 1
+  debugDrawMinigameInput: 0
+  debugDrawRayLength: 5
+  debugDrawPlaneSize: 0.5
+  debugDrawPointRadius: 0.03
 --- !u!4 &822723317
 Transform:
   m_ObjectHideFlags: 0
@@ -1274,7 +1283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleTestMovement
   moveSpeed: 5
-  mouseSensitivity: 2
+  mouseSensitivity: 0.5
   lockCursor: 1
 --- !u!114 &1706431844
 MonoBehaviour:
@@ -1709,6 +1718,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7082232222911459080, guid: 9b8e144696f95bf45a752d3608d5fd92, type: 3}
+      propertyPath: initialMasksBottomToTop.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7082232222911459080, guid: 9b8e144696f95bf45a752d3608d5fd92, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2bd402e72a799a54abec83da61498107, type: 2}
     - target: {fileID: 8187444721295608339, guid: 9b8e144696f95bf45a752d3608d5fd92, type: 3}
       propertyPath: m_Name
       value: Stationary_Enemy

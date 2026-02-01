@@ -79,7 +79,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PointerPositionDelta",
+                    "name": "PointerPosition",
                     "type": "Value",
                     "id": "74eb3c9b-a308-459a-87fb-a15bb48ab65d",
                     "expectedControlType": "Vector2",
@@ -180,11 +180,11 @@
                 {
                     "name": "",
                     "id": "b41975af-244d-4fe6-a4a7-afb1b47d3526",
-                    "path": "<Mouse>/delta",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PointerPositionDelta",
+                    "action": "PointerPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

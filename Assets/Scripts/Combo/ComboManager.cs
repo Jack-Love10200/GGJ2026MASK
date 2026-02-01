@@ -54,18 +54,18 @@ public class ComboManager : MonoBehaviour
             }
         }
 
-        // For debugging, increase value always over time. TODO: remove or put this under a debug bool
-        IncreaseComboValue(mDebugComboIncreaseRate * Time.deltaTime);
+        //// For debugging, increase value always over time. TODO: remove or put this under a debug bool
+        //IncreaseComboValue(mDebugComboIncreaseRate * Time.deltaTime);
 
-        if (mCurrComboValue > mComboLevelSettings.mComboLevelThresholds[mComboLevelSettings.mComboLevelThresholds.Count - 1])
-        {
-            mDebugComboIncreaseRate = Mathf.Abs(mDebugComboIncreaseRate) * -1;
-        }
+        //if (mCurrComboValue > mComboLevelSettings.mComboLevelThresholds[mComboLevelSettings.mComboLevelThresholds.Count - 1])
+        //{
+        //    mDebugComboIncreaseRate = Mathf.Abs(mDebugComboIncreaseRate) * -1;
+        //}
 
-        if (mCurrComboValue < 0)
-        {
-            mDebugComboIncreaseRate = Mathf.Abs(mDebugComboIncreaseRate);
-        }
+        //if (mCurrComboValue < 0)
+        //{
+        //    mDebugComboIncreaseRate = Mathf.Abs(mDebugComboIncreaseRate);
+        //}
     }
 
     // Public interface
