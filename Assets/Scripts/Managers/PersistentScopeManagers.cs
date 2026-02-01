@@ -9,21 +9,18 @@ public class PersistentScopeManagers : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // if an instance already exists, destroy this one, so that we can put this manager in each level, but don't get duplicates created
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            // Set to not destroy on load so that we have it always persistent
-            DontDestroyOnLoad(gameObject);
-        }
     }
 
     // Update is called once per frame

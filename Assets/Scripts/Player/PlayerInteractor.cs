@@ -21,14 +21,19 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField] private bool debugInteractions = false;
 
     private GameStateManager gsm;
+    private bool isInputOwner;
 
     private void Awake()
     {
         gsm = FindAnyObjectByType<GameStateManager>();
+        isInputOwner = GetComponent<Player>() != null;
     }
 
     private void OnEnable()
     {
+        if (!isInputOwner)
+            return;
+
         leftAction.action.Enable();
         rightAction.action.Enable();
         upAction.action.Enable();
@@ -39,6 +44,9 @@ public class PlayerInteractor : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!isInputOwner)
+            return;
+
         leftAction.action.Disable();
         rightAction.action.Disable();
         upAction.action.Disable();
@@ -49,6 +57,9 @@ public class PlayerInteractor : MonoBehaviour
 
     private void Update()
     {
+        if (!isInputOwner)
+            return;
+
         if (gsm != null && gsm.CurrentState != GameState.Playing)
             return;
 

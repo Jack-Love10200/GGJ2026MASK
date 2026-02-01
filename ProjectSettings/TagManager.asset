@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Mask
+  - JunctionTrigger
   layers:
   - Default
   - TransparentFX
@@ -12,8 +13,8 @@ TagManager:
   - Enemy
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - Triggers
   - 
   - 
   - 
