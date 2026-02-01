@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,7 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField] private InputActionReference rightAction;
     [SerializeField] private InputActionReference upAction;
     [SerializeField] private InputActionReference downAction;
+    [SerializeField] private KeyCode interactKey = KeyCode.Space;
     [SerializeField] private InputActionReference clickAction;
     [SerializeField] private InputActionReference pointerPositionAction;
     [SerializeField] private LayerMask raycastMask = ~0;
@@ -85,6 +87,9 @@ public class PlayerInteractor : MonoBehaviour
             SendKeyInteraction(target, KeyCode.UpArrow);
         if (downAction.action.WasPressedThisFrame())
             SendKeyInteraction(target, KeyCode.DownArrow);
+
+        if (interactKey != KeyCode.None && !IsArrowKey(interactKey) && WasKeyPressedThisFrame(interactKey))
+            SendKeyInteraction(target, interactKey);
     }
 
     private void HandlePointerInput()
@@ -232,6 +237,51 @@ public class PlayerInteractor : MonoBehaviour
         }
 
         return best;
+    }
+
+    private static bool IsArrowKey(KeyCode key)
+    {
+        return key == KeyCode.LeftArrow ||
+               key == KeyCode.RightArrow ||
+               key == KeyCode.UpArrow ||
+               key == KeyCode.DownArrow;
+    }
+
+    private static bool WasKeyPressedThisFrame(KeyCode keyCode)
+    {
+        if (Keyboard.current == null || keyCode == KeyCode.None)
+            return false;
+
+        if (!TryMapKeyCode(keyCode, out var key))
+            return false;
+
+        var control = Keyboard.current[key];
+        return control != null && control.wasPressedThisFrame;
+    }
+
+    private static bool TryMapKeyCode(KeyCode keyCode, out Key key)
+    {
+        key = Key.None;
+
+        string name = keyCode.ToString();
+        if (keyCode >= KeyCode.Alpha0 && keyCode <= KeyCode.Alpha9)
+        {
+            name = $"Digit{keyCode - KeyCode.Alpha0}";
+        }
+        else if (keyCode >= KeyCode.Keypad0 && keyCode <= KeyCode.Keypad9)
+        {
+            name = $"Numpad{keyCode - KeyCode.Keypad0}";
+        }
+        else if (keyCode == KeyCode.Return)
+        {
+            name = "Enter";
+        }
+        else if (keyCode == KeyCode.KeypadEnter)
+        {
+            name = "NumpadEnter";
+        }
+
+        return Enum.TryParse(name, out key);
     }
 
     private Collider[] GetEnemyCandidates()
