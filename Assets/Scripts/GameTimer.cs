@@ -1,27 +1,32 @@
+using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameTimer : MonoBehaviour
 {
     // public ////////////////////////////////
     public double startTime = 120.0; // start time in seconds
-    public TextMeshProUGUI debugText; // reference to the TextMeshPro component to display the time
+    public TextMeshProUGUI timerLabel; // reference to the TextMeshPro component to display the time
     public GameObject loseScreenPrefab; // reference to the lose screen object
 
     // private ///////////////////////////////
-    private double currentTime = 0.0; // is set to the start time at the beginning of the game. decreases as time passes.
-    private GameStateManager gsm;
+    public double currentTime = 0.0; // is set to the start time at the beginning of the game. decreases as time passes.
+    private GameStateManager gameStateManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void TimerStart()
     {
-        gsm = PersistentScopeManagers.Instance.GetComponent<GameStateManager>();
+        gameStateManager = PersistentScopeManagers.Instance.GetComponent<GameStateManager>();
         currentTime = startTime;
     }
 
-    string GetCurrentTime()
+    public string GetCurrentTime()
     {
-        return currentTime.ToString("F2");
+        int minutes = Mathf.FloorToInt((float)currentTime / 60);
+        int seconds = Mathf.FloorToInt((float)currentTime % 60);
+        int milliseconds = Mathf.FloorToInt((float)(currentTime * 1000) % 1000);
+        return string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, milliseconds);
     }
 
     void Start()
@@ -29,11 +34,10 @@ public class GameTimer : MonoBehaviour
         TimerStart();
     }
 
-    // Update is called once per frame
     void Update()
     {
         // only lower the timer if the game is running
-        if (gsm.CurrentState != GameState.Playing)
+        if (gameStateManager.CurrentState != GameState.Playing)
             return;
 
         currentTime -= Time.deltaTime;
@@ -44,10 +48,7 @@ public class GameTimer : MonoBehaviour
             GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
             Instantiate(loseScreenPrefab, canvas.transform);
             currentTime = 0.0;
-            gsm.CurrentState = GameState.GameOver;
+            gameStateManager.CurrentState = GameState.GameOver;
         }
-
-        if (debugText)
-            debugText.text = currentTime.ToString("F2");
     }
 }

@@ -33,7 +33,7 @@ RectTransform:
   m_Father: {fileID: 6205889777223257488}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2664046703724291104}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.76
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -644,6 +644,7 @@ GameObject:
   - component: {fileID: 6161262208584320900}
   - component: {fileID: 1388307313201604773}
   - component: {fileID: 974519141115365972}
+  - component: {fileID: 3258141999685104905}
   m_Layer: 5
   m_Name: OptionsMenu
   m_TagString: Untagged
@@ -753,6 +754,20 @@ MonoBehaviour:
   masterSlider: {fileID: 182762706438263176}
   musicSlider: {fileID: 1014647935635766155}
   sfxSlider: {fileID: 4085310270379447740}
+--- !u!114 &3258141999685104905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221621145375781370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 999e675be0c921e44a104d3374ce102b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIParallax
+  moveModifier: -15
+  rotModifier: 3
 --- !u!1 &1286338013593768387
 GameObject:
   m_ObjectHideFlags: 0
@@ -1293,7 +1308,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 15, y: 0}
-  m_SizeDelta: {x: 5, y: 5}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2245305751227267238
 CanvasRenderer:
@@ -1904,7 +1919,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1256912270711359046
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1983,7 +1998,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 3
   m_Viewport: {fileID: 9056551069340808785}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 897044528894640619}

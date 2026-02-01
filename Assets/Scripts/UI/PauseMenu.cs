@@ -1,11 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
+    [Header("Timer")]
+    public TextMeshProUGUI timerLabel;
+
     [Header("Post-Processing")]
     public Volume crtVolume;
     public float transitionDuration = 0.1f;
@@ -19,10 +24,11 @@ public class PauseMenu : MonoBehaviour
     [Header("Submenus")]
     public Transform submenuParent;
     public GameObject optionsMenuPrefab;
-    //public GameObject mainMenuConfirmationPrefab;
-    //public GameObject quitConfirmationPrefab;
+    public GameObject mainMenuConfirmationPrefab;
+    public GameObject quitConfirmationPrefab;
 
     private PauseManager pauseManager;
+    private GameTimer gameTimer;
     private Coroutine fadeCoroutine;
     private List<GameObject> Submenus = new List<GameObject>();
 
@@ -34,11 +40,14 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         pauseManager = FindAnyObjectByType<PauseManager>();
+        gameTimer = FindAnyObjectByType<GameTimer>();
 
         resumeButton.onClick.AddListener(ResumeButton);
         optionsButton.onClick.AddListener(OptionsButton);
         mainMenuButton.onClick.AddListener(MainMenuButton);
         quitButton.onClick.AddListener(QuitButton);
+
+        UpdateTimerLabel();
     }
 
     void Update()
@@ -67,12 +76,12 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenuButton()
     {
-        //Submenus.Add(Instantiate(mainMenuConfirmation, submenuParent));
+        Submenus.Add(Instantiate(mainMenuConfirmationPrefab, submenuParent));
     }
 
     public void QuitButton()
     {
-        //Submenus.Add(Instantiate(quitConfirmation, submenuParent));
+        Submenus.Add(Instantiate(quitConfirmationPrefab, submenuParent));
     }
 
     public void DestroySubmenus()
@@ -83,8 +92,64 @@ public class PauseMenu : MonoBehaviour
             optionsMenu.CloseButton();
         }
 
+        MainMenuConfirmation mainMenuConfirmation = FindAnyObjectByType<MainMenuConfirmation>();
+        if (mainMenuConfirmation != null)
+        {
+            mainMenuConfirmation.NoButton();
+        }
+
+        QuitConfirmation quitConfirmation = FindAnyObjectByType<QuitConfirmation>();
+        if (quitConfirmation != null)
+        {
+            quitConfirmation.NoButton();
+        }
+
         Submenus.Clear();
     }
+
+    #region Timer
+    public void UpdateTimerLabel()
+    {
+        string timerOutput = "";
+        timerOutput += "-" + gameTimer.GetCurrentTime() + "\n";
+        timerOutput += GetRealWorldTime();
+
+        timerLabel.text = timerOutput;
+    }
+
+    string GetRealWorldTime()
+    {
+        DateTime now = DateTime.Now;
+
+        string timePart = now.ToString("tt hh:mm");
+        string month = now.ToString("MMM");
+        string year = now.ToString("yyyy");
+        string day = now.Day.ToString();
+        string suffix = GetDaySuffix(now.Day);
+        string datePart = $"{month} {day}{suffix} {year}";
+        return $"{timePart}\n{datePart}";
+    }
+
+    string GetDaySuffix(int day)
+    {
+        if (day % 100 >= 11 && day % 100 <= 13)
+        {
+            return "th";
+        }
+
+        switch (day % 10)
+        {
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
+        }
+    }
+    #endregion
 
     #region Post Processing Volume
     private IEnumerator AnimateVolumeWeight(float targetWeight)
