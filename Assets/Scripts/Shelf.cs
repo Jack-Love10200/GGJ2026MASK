@@ -17,6 +17,8 @@ public class Shelf : MonoBehaviour
     {
         spawnArea = GetComponent<BoxCollider>();
         int maxAttempts = 30;
+        float spawnAreaBottomY = spawnArea.center.y - spawnArea.size.y / 2f;
+        float worldSpawnAreaBottomY = transform.TransformPoint(new Vector3(0, spawnAreaBottomY, 0)).y;
 
         for (int i = 0; i < propCount; i++)
         {
@@ -37,12 +39,13 @@ public class Shelf : MonoBehaviour
 
                 Vector3 localPos = new Vector3(
                     Random.Range(-halfX, halfX),
-                    0,
+                    spawnAreaBottomY,
                     Random.Range(-halfZ, halfZ)
                 );
                 localPos += spawnArea.center;
                 Vector3 worldPos = transform.TransformPoint(localPos);
-
+                float propBottomOffset = prefabRenderer.bounds.min.y - propPrefab.transform.position.y;
+                worldPos.y = worldSpawnAreaBottomY - propBottomOffset;
                 propBounds.center = worldPos + (propBounds.center - propPrefab.transform.position);
 
                 // check against all of the bounds we have placed

@@ -52,7 +52,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 1, z: 1}
+  m_Size: {x: 3.3, y: 1, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1078240062113007403
 MonoBehaviour:
@@ -66,5 +66,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03ef0a2e50be001498cf7f04a7d39f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  propPrefabs: []
-  propCount: 40
+  PropPrefabs: []
+  PropCount: 5
