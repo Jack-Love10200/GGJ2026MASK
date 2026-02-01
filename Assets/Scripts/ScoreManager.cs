@@ -15,7 +15,7 @@ public class ScoreManager : MonoBehaviour
     {
         m_KillCount++;
 
-        if (m_KillCount == KillQuota)
+        if (m_KillCount >= KillQuota)
         {
             gsm.CurrentState = GameState.Win;
 

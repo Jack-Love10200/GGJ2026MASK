@@ -40,6 +40,8 @@ public class GameTimer : MonoBehaviour
         if (gameStateManager.CurrentState != GameState.Playing)
             return;
 
+        timerLabel.SetText(GetCurrentTime());
+
         currentTime -= Time.deltaTime;
 
         if (currentTime <= 0.0)

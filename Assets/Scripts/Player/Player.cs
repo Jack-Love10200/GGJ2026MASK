@@ -45,14 +45,23 @@ public class Player : MonoBehaviour
 
   InputDirection desiredDirection = InputDirection.Forward;
 
+  bool pausedFromGameEnd = false;
+
   void Start()
   {
-
+        // Subscribe to state switching
+        PersistentScopeManagers.Instance.GetComponent<GameStateManager>().OnStateSwitch += OnGameStateSwitch;
   }
   void Update()
   {
     if (pausedByMinigame)
       return;
+
+    if (pausedFromGameEnd)
+    {
+      return;
+    }
+
 
     if (currentState == MovementState.Moving)
     {
@@ -161,4 +170,10 @@ public class Player : MonoBehaviour
       currentTurn = savedTurn;
     }
   }
+
+  void OnGameStateSwitch(GameState newGameState)
+  {
+    pausedFromGameEnd = true;
+  }
 }
+
