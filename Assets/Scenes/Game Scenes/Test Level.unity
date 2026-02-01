@@ -1955,6 +1955,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1175950108536000427, guid: f0fb613e9c409984b907e270d27ca9af, type: 3}
+      propertyPath: timerLabel
+      value: 
+      objectReference: {fileID: 1590428029}
     - target: {fileID: 2748330510175666803, guid: f0fb613e9c409984b907e270d27ca9af, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2441,7 +2445,6 @@ GameObject:
   - component: {fileID: 1590428027}
   - component: {fileID: 1590428030}
   - component: {fileID: 1590428029}
-  - component: {fileID: 1590428028}
   m_Layer: 5
   m_Name: TimeText
   m_TagString: Untagged
@@ -2468,22 +2471,6 @@ RectTransform:
   m_AnchoredPosition: {x: 23, y: -3}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1590428028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1590428026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 340703b5873c23e46aaf9a4777297d54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameTimer
-  startTime: 120
-  timerLabel: {fileID: 0}
-  loseScreenPrefab: {fileID: 0}
-  currentTime: 0
 --- !u!114 &1590428029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2970,71 +2957,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1744551309}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &2020753945
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8.98838
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3.02681
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1039052071579748199, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2497900453864146773, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: debugText
-      value: 
-      objectReference: {fileID: 1590428029}
-    - target: {fileID: 2497900453864146773, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: startTime
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 9189602866273329226, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
-      propertyPath: m_Name
-      value: GameTimer
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8f1671cb0c2269a49ad325f1fe933cab, type: 3}
 --- !u!1001 &2084433348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3186,5 +3108,4 @@ SceneRoots:
   - {fileID: 2084433348}
   - {fileID: 1415762289}
   - {fileID: 1224642389}
-  - {fileID: 2020753945}
   - {fileID: 1325249757}
