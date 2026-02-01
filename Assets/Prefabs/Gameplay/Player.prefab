@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4924833003507216913}
   - component: {fileID: 2315432357109393467}
   - component: {fileID: 7439183360897030768}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 4919053225491481938}
   - component: {fileID: 8864451937882875011}
   - component: {fileID: 4230451550983369188}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,6 +267,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   Speed: 6
   TurnTime: 1
+  desiredDirection: 2
 --- !u!114 &8864451937882875011
 MonoBehaviour:
   m_ObjectHideFlags: 0

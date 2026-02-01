@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 4553276987608097993}
   - component: {fileID: 5508732661943114114}
   - component: {fileID: 5374824166556774838}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: JunctionTrigger
-  m_TagString: Untagged
+  m_TagString: JunctionTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
