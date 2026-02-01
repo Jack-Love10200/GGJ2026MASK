@@ -204,6 +204,11 @@ public class EnemyMaskStackVisual : MonoBehaviour
 
         var anchor = new GameObject("MinigameAnchor").transform;
         anchor.SetParent(root.transform, false);
+        var parentScale = root.transform.lossyScale;
+        anchor.localScale = new Vector3(
+            parentScale.x < 0f ? -1f : 1f,
+            parentScale.y < 0f ? -1f : 1f,
+            parentScale.z < 0f ? -1f : 1f);
 
         layers.Add(new MaskLayer
         {
