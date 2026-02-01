@@ -79,7 +79,7 @@ MonoBehaviour:
     prefab: {fileID: 5833809555095692221, guid: 12525e94a766dd349ae16758d8feeaa5, type: 3}
   focusCameraOnMinigame: 1
   focusCamera: {fileID: 0}
-  focusLocalOffset: {x: 0, y: 0, z: -1.5}
+  focusLocalOffset: {x: 0, y: 0, z: 1.5}
   focusFov: 25
   smoothCameraFocus: 1
   focusSmoothTime: 0.25

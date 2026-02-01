@@ -21,6 +21,13 @@ public class KeyPressUnlockAction : MaskUnlockAction
         if (evt.key != requiredKey)
             return;
 
+        if (ctx.enemy != null && ctx.player != null)
+        {
+            var hands = ctx.player.GetComponentInChildren<Hands>();
+            if (hands != null && ctx.enemy.TryGetTopMaskVisual(out var visual))
+                hands.PlayMaskGrab(visual, ctx.enemy.transform);
+        }
+
         ctx.PopTopMask();
     }
 }

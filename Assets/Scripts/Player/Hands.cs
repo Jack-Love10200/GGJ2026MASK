@@ -5,9 +5,41 @@ using UnityEngine.InputSystem;
 
 public class Hands : MonoBehaviour
 {
+    public enum HandPose
+    {
+        Idle,
+        Reach,
+        Grab,
+        Flip,
+        Rock,
+        ThumbDown,
+        ThumbUp
+    }
+
+    [System.Serializable]
+    public struct HandSpriteSet
+    {
+        public Sprite idle;
+        public Sprite reach;
+        public Sprite grab;
+        public Sprite flip;
+        public Sprite rock;
+        public Sprite thumbDown;
+        public Sprite thumbUp;
+    }
     [Header("Speeds")]
     public float moveToOptionSpeed = 16f;
     public float returnSpeed = 8f;
+    public float attachFollowSpeed = 18f;
+    public float cursorFollowSpeed = 22f;
+
+    [Header("Mask Fling")]
+    public float maskHoldSeconds = 0.06f;
+    public float maskFlingSpeed = 2.5f;
+    public float maskFlingUpward = 1.2f;
+    public float maskFlingGravity = 4f;
+    public float maskFlingDuration = 0.7f;
+    public float maskFlingSpinDegPerSec = 360f;
 
     [Header("References")]
     public Transform leftHand;
@@ -16,10 +48,18 @@ public class Hands : MonoBehaviour
     public Transform leftReadyPos;
     public Transform rightReadyPos;
 
+    [Header("Hand Sprites")]
+    public SpriteRenderer leftRenderer;
+    public SpriteRenderer rightRenderer;
+    public HandSpriteSet leftSprites;
+    public HandSpriteSet rightSprites;
+
     private Vector3 leftOriginPos;
     private Vector3 rightOriginPos;
     private Quaternion leftOriginRot;
     private Quaternion rightOriginRot;
+    private Transform leftOriginalParent;
+    private Transform rightOriginalParent;
 
     private Vector3 leftLocalTargetPos;
     private Vector3 rightLocalTargetPos;
@@ -37,12 +77,25 @@ public class Hands : MonoBehaviour
 
     private bool leftImpulseActive;
     private bool rightImpulseActive;
+    private bool leftExternalControl;
+    private bool rightExternalControl;
+    private Transform leftAttachTarget;
+    private Vector3 rightCursorWorld;
+    private bool rightCursorHasTarget;
+    private Quaternion leftExternalRotation;
+    private HandPose leftBasePose = HandPose.Idle;
+    private HandPose rightBasePose = HandPose.Idle;
+    private bool gestureActive;
+    private HandPose gesturePose = HandPose.Idle;
 
     private Coroutine leftRoutine;
     private Coroutine rightRoutine;
 
     private void Start()
     {
+        leftOriginalParent = leftHand != null ? leftHand.parent : null;
+        rightOriginalParent = rightHand != null ? rightHand.parent : null;
+
         leftOriginPos = leftHand.localPosition;
         rightOriginPos = rightHand.localPosition;
 
@@ -54,11 +107,23 @@ public class Hands : MonoBehaviour
 
         leftLocalTargetRot = leftOriginRot;
         rightLocalTargetRot = rightOriginRot;
+
+        if (leftRenderer == null && leftHand != null)
+            leftRenderer = leftHand.GetComponentInChildren<SpriteRenderer>();
+        if (rightRenderer == null && rightHand != null)
+            rightRenderer = rightHand.GetComponentInChildren<SpriteRenderer>();
+
+        SetBasePose(true, HandPose.Idle);
+        SetBasePose(false, HandPose.Idle);
     }
 
     private void Update()
     {
-        if (!leftImpulseActive)
+        if (leftExternalControl)
+        {
+            UpdateLeftExternal();
+        }
+        else if (!leftImpulseActive)
         {
             leftHand.localPosition = Vector3.Lerp(
                 leftHand.localPosition,
@@ -73,7 +138,11 @@ public class Hands : MonoBehaviour
             );
         }
 
-        if (!rightImpulseActive)
+        if (rightExternalControl)
+        {
+            UpdateRightExternal();
+        }
+        else if (!rightImpulseActive)
         {
             rightHand.localPosition = Vector3.Lerp(
                 rightHand.localPosition,
@@ -212,14 +281,14 @@ public class Hands : MonoBehaviour
         if (isLeft) leftImpulseActive = true;
         else rightImpulseActive = true;
 
-        Transform originalParent = transform;
+        SetBasePose(isLeft, HandPose.Reach);
+
+        Transform originalParent = hand.parent;
+        Quaternion fixedRotation = hand.rotation;
         hand.SetParent(null, true);
 
         // World-space impulse
-        while (
-            Vector3.Distance(hand.position, option.position) > 0.01f ||
-            Quaternion.Angle(hand.rotation, option.rotation) > 1f
-        )
+        while (Vector3.Distance(hand.position, option.position) > 0.01f)
         {
             hand.position = Vector3.Lerp(
                 hand.position,
@@ -227,21 +296,313 @@ public class Hands : MonoBehaviour
                 Time.deltaTime * moveToOptionSpeed
             );
 
-            hand.rotation = Quaternion.Slerp(
-                hand.rotation,
-                option.rotation,
-                Time.deltaTime * moveToOptionSpeed
-            );
+            hand.rotation = fixedRotation;
 
             yield return null;
         }
 
-        // Re-parent and convert space correctly
+        hand.rotation = fixedRotation;
+        SetBasePose(isLeft, HandPose.Grab);
+        RestoreHandParent(hand, originalParent);
+        SetReturnTargets(isLeft);
+        SetBasePose(isLeft, HandPose.Idle);
+
+        if (isLeft) leftImpulseActive = false;
+        else rightImpulseActive = false;
+    }
+
+    // ---------- MINIGAME CONTROL ----------
+
+    public void EnterMinigameMode(Transform leftSocket)
+    {
+        leftAttachTarget = leftSocket;
+        leftExternalControl = leftAttachTarget != null;
+        rightExternalControl = true;
+        rightCursorHasTarget = false;
+
+        if (leftExternalControl && leftHand != null)
+        {
+            leftHand.SetParent(null, true);
+            leftExternalRotation = leftHand.rotation;
+        }
+
+        if (rightExternalControl && rightHand != null)
+            rightHand.SetParent(null, true);
+    }
+
+    public void ExitMinigameMode()
+    {
+        leftExternalControl = false;
+        rightExternalControl = false;
+        leftAttachTarget = null;
+        rightCursorHasTarget = false;
+
+        if (leftHand != null)
+            RestoreHandParent(leftHand, leftOriginalParent);
+        if (rightHand != null)
+            RestoreHandParent(rightHand, rightOriginalParent);
+
+        SetReturnTargets(true);
+        SetReturnTargets(false);
+    }
+
+    public void SetRightCursorWorld(Vector3 worldPoint)
+    {
+        rightCursorWorld = worldPoint;
+        rightCursorHasTarget = true;
+    }
+
+    // ---------- MASK FLING ----------
+
+    public void PlayMaskGrab(EnemyMaskStackVisual.MaskVisualData visual, Transform enemyTransform)
+    {
+        if (visual.sprite == null)
+            return;
+
+        bool canUseLeft = leftHand != null && !leftExternalControl;
+        bool canUseRight = rightHand != null && !rightExternalControl;
+
+        if (!canUseLeft && !canUseRight)
+            return;
+
+        bool useLeft = canUseLeft;
+        if (canUseLeft && canUseRight)
+        {
+            float leftDist = Vector3.Distance(leftHand.position, visual.position);
+            float rightDist = Vector3.Distance(rightHand.position, visual.position);
+            useLeft = leftDist <= rightDist;
+        }
+
+        if (useLeft)
+        {
+            if (leftRoutine != null)
+                StopCoroutine(leftRoutine);
+            leftRoutine = StartCoroutine(GrabAndThrow(leftHand, visual, enemyTransform, true));
+        }
+        else
+        {
+            if (rightRoutine != null)
+                StopCoroutine(rightRoutine);
+            rightRoutine = StartCoroutine(GrabAndThrow(rightHand, visual, enemyTransform, false));
+        }
+    }
+
+    private IEnumerator GrabAndThrow(
+        Transform hand,
+        EnemyMaskStackVisual.MaskVisualData visual,
+        Transform enemyTransform,
+        bool isLeft
+    )
+    {
+        if (isLeft) leftImpulseActive = true;
+        else rightImpulseActive = true;
+
+        SetBasePose(isLeft, HandPose.Reach);
+
+        Transform originalParent = hand.parent;
+        Quaternion fixedRotation = hand.rotation;
+        hand.SetParent(null, true);
+
+        while (Vector3.Distance(hand.position, visual.position) > 0.01f)
+        {
+            hand.position = Vector3.Lerp(
+                hand.position,
+                visual.position,
+                Time.deltaTime * moveToOptionSpeed
+            );
+
+            hand.rotation = fixedRotation;
+
+            yield return null;
+        }
+
+        hand.rotation = fixedRotation;
+        SetBasePose(isLeft, HandPose.Grab);
+        GameObject clone = SpawnMaskClone(visual);
+        if (clone != null)
+            clone.transform.SetParent(hand, true);
+
+        if (maskHoldSeconds > 0f)
+            yield return new WaitForSeconds(maskHoldSeconds);
+
+        if (clone != null)
+            clone.transform.SetParent(null, true);
+
+        Vector3 throwDir = hand.forward;
+        if (enemyTransform != null)
+            throwDir = (hand.position - enemyTransform.position);
+
+        if (throwDir.sqrMagnitude < 0.0001f)
+            throwDir = hand.forward;
+        throwDir.Normalize();
+
+        RestoreHandParent(hand, originalParent);
+        SetReturnTargets(isLeft);
+        SetBasePose(isLeft, HandPose.Idle);
+
+        if (isLeft) leftImpulseActive = false;
+        else rightImpulseActive = false;
+
+        if (clone != null)
+            yield return FlingMask(clone, throwDir);
+    }
+
+    private GameObject SpawnMaskClone(EnemyMaskStackVisual.MaskVisualData visual)
+    {
+        var clone = new GameObject("MaskFlingClone");
+        var renderer = clone.AddComponent<SpriteRenderer>();
+        renderer.sprite = visual.sprite;
+        renderer.sortingLayerID = visual.sortingLayerID;
+        renderer.sortingOrder = visual.sortingOrder + 1;
+
+        clone.transform.position = visual.position;
+        clone.transform.rotation = visual.rotation;
+        Vector3 scale = visual.lossyScale;
+        if (scale.sqrMagnitude < 0.0001f)
+            scale = Vector3.one;
+        clone.transform.localScale = scale;
+        return clone;
+    }
+
+    private IEnumerator FlingMask(GameObject clone, Vector3 throwDir)
+    {
+        Vector3 velocity = throwDir * maskFlingSpeed + Vector3.up * maskFlingUpward;
+        float time = 0f;
+
+        while (time < maskFlingDuration && clone != null)
+        {
+            velocity += Vector3.down * maskFlingGravity * Time.deltaTime;
+            clone.transform.position += velocity * Time.deltaTime;
+            clone.transform.rotation = Quaternion.AngleAxis(maskFlingSpinDegPerSec * Time.deltaTime, Vector3.forward) * clone.transform.rotation;
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        if (clone != null)
+            Destroy(clone);
+    }
+
+    private void UpdateLeftExternal()
+    {
+        if (leftAttachTarget == null || leftHand == null)
+            return;
+
+        leftHand.position = Vector3.Lerp(
+            leftHand.position,
+            leftAttachTarget.position,
+            Time.deltaTime * attachFollowSpeed
+        );
+
+        leftHand.rotation = leftExternalRotation;
+    }
+
+    private void UpdateRightExternal()
+    {
+        if (!rightCursorHasTarget || rightHand == null)
+            return;
+
+        rightHand.position = Vector3.Lerp(
+            rightHand.position,
+            rightCursorWorld,
+            Time.deltaTime * cursorFollowSpeed
+        );
+    }
+
+    private void RestoreHandParent(Transform hand, Transform originalParent)
+    {
         hand.SetParent(originalParent, true);
+        if (originalParent == null)
+            return;
+
         hand.localPosition = originalParent.InverseTransformPoint(hand.position);
         hand.localRotation = Quaternion.Inverse(originalParent.rotation) * hand.rotation;
+    }
 
-        // Set return targets
+    // ---------- HAND POSE ----------
+
+    public void OnGestureFlip(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.Flip);
+    }
+
+    public void OnGestureRock(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.Rock);
+    }
+
+    public void OnGestureThumbDown(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.ThumbDown);
+    }
+
+    public void OnGestureThumbUp(InputAction.CallbackContext context)
+    {
+        HandleGestureInput(context, HandPose.ThumbUp);
+    }
+
+    private void HandleGestureInput(InputAction.CallbackContext context, HandPose pose)
+    {
+        if (context.started || context.performed)
+        {
+            SetGesturePose(pose);
+            return;
+        }
+
+        if (context.canceled && gesturePose == pose)
+            ClearGesturePose();
+    }
+
+    private void SetGesturePose(HandPose pose)
+    {
+        gestureActive = true;
+        gesturePose = pose;
+        ApplyPose(true, pose);
+        ApplyPose(false, pose);
+    }
+
+    private void ClearGesturePose()
+    {
+        gestureActive = false;
+        ApplyPose(true, leftBasePose);
+        ApplyPose(false, rightBasePose);
+    }
+
+    private void SetBasePose(bool isLeft, HandPose pose)
+    {
+        if (isLeft)
+            leftBasePose = pose;
+        else
+            rightBasePose = pose;
+
+        if (!gestureActive)
+            ApplyPose(isLeft, pose);
+    }
+
+    private void ApplyPose(bool isLeft, HandPose pose)
+    {
+        var renderer = isLeft ? leftRenderer : rightRenderer;
+        if (renderer == null)
+            return;
+
+        var set = isLeft ? leftSprites : rightSprites;
+        Sprite sprite = pose switch
+        {
+            HandPose.Reach => set.reach,
+            HandPose.Grab => set.grab,
+            HandPose.Flip => set.flip,
+            HandPose.Rock => set.rock,
+            HandPose.ThumbDown => set.thumbDown,
+            HandPose.ThumbUp => set.thumbUp,
+            _ => set.idle
+        };
+
+        if (sprite != null)
+            renderer.sprite = sprite;
+    }
+
+    private void SetReturnTargets(bool isLeft)
+    {
         if (isLeft)
         {
             leftLocalTargetPos = leftReadied
@@ -251,8 +612,6 @@ public class Hands : MonoBehaviour
             leftLocalTargetRot = leftReadied
                 ? leftReadyPos.localRotation
                 : leftOriginRot;
-
-            leftImpulseActive = false;
         }
         else
         {
@@ -263,8 +622,6 @@ public class Hands : MonoBehaviour
             rightLocalTargetRot = rightReadied
                 ? rightReadyPos.localRotation
                 : rightOriginRot;
-
-            rightImpulseActive = false;
         }
     }
 }
