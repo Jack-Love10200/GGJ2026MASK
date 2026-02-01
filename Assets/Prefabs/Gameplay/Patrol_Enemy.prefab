@@ -278,6 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpriteController
   personSprite: {fileID: 201114372834654473}
   EnemyShader: {fileID: -6465566751694194690, guid: 9b32d606280a19d44bdb051879c645e3, type: 3}
+  FaceSocket: {fileID: 0}
   PeopleTextures:
   - {fileID: 2800000, guid: 94c218802c4150d40bcba1ba03b6144e, type: 3}
   - {fileID: 2800000, guid: a68e76907eaed3c4db16d9b34a0d4b8d, type: 3}
@@ -293,6 +294,11 @@ MonoBehaviour:
   - {r: 0.016067656, g: 0.735849, b: 0.006941857, a: 0}
   - {r: 0.022427775, g: 0.2643358, b: 0.7924528, a: 0}
   - {r: 0.81761, g: 0, b: 0.70540905, a: 0}
+  FaceOffsets:
+  - {x: 0.14, y: -0.78, z: 0}
+  - {x: -0.19, y: -1.04, z: 0}
+  - {x: 0, y: -0.82, z: 0}
+  - {x: 0, y: -2.03, z: 0}
   PixelationStrength: 1
   ColorBands: 10
   garbleSpeed: 1

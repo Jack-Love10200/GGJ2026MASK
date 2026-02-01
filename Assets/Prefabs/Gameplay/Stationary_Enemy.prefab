@@ -172,14 +172,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8187444721295608339}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -5.38, y: 0, z: 4.83}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 4.83}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5471500979103416853}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8262734256943645971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +218,7 @@ MonoBehaviour:
   perLayerZOffset: 0
   deterministicJitter: 1
   seedOverride: 0
+  debugInteractions: 0
 --- !u!114 &399133336270910034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,6 +233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpriteController
   personSprite: {fileID: 6746849366139338875}
   EnemyShader: {fileID: -6465566751694194690, guid: 9b32d606280a19d44bdb051879c645e3, type: 3}
+  FaceSocket: {fileID: 8069393196697125263}
   PeopleTextures:
   - {fileID: 2800000, guid: 94c218802c4150d40bcba1ba03b6144e, type: 3}
   - {fileID: 2800000, guid: a68e76907eaed3c4db16d9b34a0d4b8d, type: 3}
@@ -247,6 +249,11 @@ MonoBehaviour:
   - {r: 0.016067656, g: 0.735849, b: 0.006941857, a: 0}
   - {r: 0.022427775, g: 0.2643358, b: 0.7924528, a: 0}
   - {r: 0.81761, g: 0, b: 0.70540905, a: 0}
+  FaceOffsets:
+  - {x: 0.14, y: -0.78, z: 0}
+  - {x: -0.19, y: -1.04, z: 0}
+  - {x: 0, y: -0.82, z: 0}
+  - {x: 0, y: -2.03, z: 0}
   PixelationStrength: 0.76
   ColorBands: 3.75
   garbleSpeed: 6.16

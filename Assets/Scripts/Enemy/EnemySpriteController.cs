@@ -10,11 +10,13 @@ public class EnemySpriteController : MonoBehaviour
   public SpriteRenderer personSprite;
   //public SpriteRenderer shirtSprite;
   public Shader EnemyShader;
+  public Transform FaceSocket;
 
   [Header("Texture/Color Data")]
   public List<Texture2D> PeopleTextures;
   public List<Texture2D> ShirtTextures;
   public List<Color> ShirtColors;
+  public List<Vector3> FaceOffsets;
 
   [Header("Material Settings")]
   public float PixelationStrength = 1.0f;
@@ -28,6 +30,7 @@ public class EnemySpriteController : MonoBehaviour
 
   void Start()
   {
+
     enemyMaterial = new Material(EnemyShader);
 
     int TexIndex = Random.Range(0, PeopleTextures.Count);
@@ -35,6 +38,8 @@ public class EnemySpriteController : MonoBehaviour
     enemyMaterial.SetTexture("_PersonTex", PeopleTextures[TexIndex]);
     enemyMaterial.SetTexture("_ShirtTex", ShirtTextures[TexIndex]);
     enemyMaterial.SetColor("_TintColor", ShirtColors[Random.Range(0, ShirtColors.Count)]);
+
+    FaceSocket.Translate(FaceOffsets[TexIndex]);
 
     //basic ssettings
     enemyMaterial.SetFloat("_PixelationStrength", PixelationStrength);
