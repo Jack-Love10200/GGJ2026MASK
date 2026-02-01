@@ -59,5 +59,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d7225cdc13db9f439042726f701a94d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5469029037802814344}
   m_SourcePrefab: {fileID: 100100000, guid: 7d7225cdc13db9f439042726f701a94d, type: 3}
+--- !u!1 &581227881636662972 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d7225cdc13db9f439042726f701a94d, type: 3}
+  m_PrefabInstance: {fileID: 347206514199278573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5469029037802814344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581227881636662972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4681c29ee8ebded45af920db4a2dbe71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FullShelvesAnyNumber
+  Shelves:
+  - ShelfTypePrefab: {fileID: 449326537764073179, guid: 7d52e3263e57cd7409330285864d641d, type: 3}
+    UpOffsetFromBottom: {x: -0.011000156, y: 1.1, z: 0.032000005}
+  - ShelfTypePrefab: {fileID: 449326537764073179, guid: 7d52e3263e57cd7409330285864d641d, type: 3}
+    UpOffsetFromBottom: {x: -0.011000156, y: 1.955, z: 0.032000005}
+  - ShelfTypePrefab: {fileID: 449326537764073179, guid: 7d52e3263e57cd7409330285864d641d, type: 3}
+    UpOffsetFromBottom: {x: -0.011000156, y: 2.686, z: 0.032000005}
+  ItemsPerShelf: 20
+  ShelfScale: 0.65
+  ShelfLocalYRotation: -90
