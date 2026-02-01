@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,6 +25,15 @@ public class PlayerInteractor : MonoBehaviour
 
     private GameStateManager gsm;
     private bool isInputOwner;
+    private InputAction leftActionRuntime;
+    private InputAction rightActionRuntime;
+    private InputAction upActionRuntime;
+    private InputAction downActionRuntime;
+    private InputAction clickActionRuntime;
+    private InputAction pointerPositionActionRuntime;
+    private readonly HashSet<EnemyMaskStackVisual> minigameBlocked = new HashSet<EnemyMaskStackVisual>();
+    private readonly HashSet<EnemyMaskStackVisual> minigameInside = new HashSet<EnemyMaskStackVisual>();
+    private readonly List<EnemyMaskStackVisual> minigameRemove = new List<EnemyMaskStackVisual>();
 
     private void Awake()
     {
@@ -36,12 +46,13 @@ public class PlayerInteractor : MonoBehaviour
         if (!isInputOwner)
             return;
 
-        leftAction.action.Enable();
-        rightAction.action.Enable();
-        upAction.action.Enable();
-        downAction.action.Enable();
-        clickAction.action.Enable();
-        pointerPositionAction.action.Enable();
+        ResolveInputActions();
+        EnableAction(leftActionRuntime);
+        EnableAction(rightActionRuntime);
+        EnableAction(upActionRuntime);
+        EnableAction(downActionRuntime);
+        EnableAction(clickActionRuntime);
+        EnableAction(pointerPositionActionRuntime);
     }
 
     private void OnDisable()
@@ -49,12 +60,12 @@ public class PlayerInteractor : MonoBehaviour
         if (!isInputOwner)
             return;
 
-        leftAction.action.Disable();
-        rightAction.action.Disable();
-        upAction.action.Disable();
-        downAction.action.Disable();
-        clickAction.action.Disable();
-        pointerPositionAction.action.Disable();
+        DisableAction(leftActionRuntime);
+        DisableAction(rightActionRuntime);
+        DisableAction(upActionRuntime);
+        DisableAction(downActionRuntime);
+        DisableAction(clickActionRuntime);
+        DisableAction(pointerPositionActionRuntime);
     }
 
     private void Update()
@@ -65,6 +76,7 @@ public class PlayerInteractor : MonoBehaviour
         if (gsm != null && gsm.CurrentState != GameState.Playing)
             return;
 
+        UpdateMinigameReentry();
         HandleKeyInput();
         HandlePointerInput();
     }
@@ -79,13 +91,13 @@ public class PlayerInteractor : MonoBehaviour
         if (target == null)
             return;
 
-        if (leftAction.action.WasPressedThisFrame())
+        if (leftActionRuntime != null && leftActionRuntime.WasPressedThisFrame())
             SendKeyInteraction(target, KeyCode.LeftArrow);
-        if (rightAction.action.WasPressedThisFrame())
+        if (rightActionRuntime != null && rightActionRuntime.WasPressedThisFrame())
             SendKeyInteraction(target, KeyCode.RightArrow);
-        if (upAction.action.WasPressedThisFrame())
+        if (upActionRuntime != null && upActionRuntime.WasPressedThisFrame())
             SendKeyInteraction(target, KeyCode.UpArrow);
-        if (downAction.action.WasPressedThisFrame())
+        if (downActionRuntime != null && downActionRuntime.WasPressedThisFrame())
             SendKeyInteraction(target, KeyCode.DownArrow);
 
         if (interactKey != KeyCode.None && !IsArrowKey(interactKey) && WasKeyPressedThisFrame(interactKey))
@@ -94,9 +106,12 @@ public class PlayerInteractor : MonoBehaviour
 
     private void HandlePointerInput()
     {
-        bool down = clickAction.action.WasPressedThisFrame();
-        bool up = clickAction.action.WasReleasedThisFrame();
-        bool held = clickAction.action.ReadValue<float>() > 0f;
+        if (clickActionRuntime == null || pointerPositionActionRuntime == null)
+            return;
+
+        bool down = clickActionRuntime.WasPressedThisFrame();
+        bool up = clickActionRuntime.WasReleasedThisFrame();
+        bool held = clickActionRuntime.ReadValue<float>() > 0f;
 
         if (!down && !held && !up)
             return;
@@ -114,7 +129,7 @@ public class PlayerInteractor : MonoBehaviour
                 return;
             }
 
-            Vector2 pointer = pointerPositionAction.action.ReadValue<Vector2>();
+            Vector2 pointer = pointerPositionActionRuntime.ReadValue<Vector2>();
             var ray = mainCamera.ScreenPointToRay(new Vector3(pointer.x, pointer.y, 0f));
             if (!manager.TryGetPointerWorldPoint(ray, out var worldPoint))
             {
@@ -172,7 +187,7 @@ public class PlayerInteractor : MonoBehaviour
             return;
         }
 
-        Vector2 pointerRay = pointerPositionAction.action.ReadValue<Vector2>();
+        Vector2 pointerRay = pointerPositionActionRuntime.ReadValue<Vector2>();
         var raycastRay = mainCamera.ScreenPointToRay(new Vector3(pointerRay.x, pointerRay.y, 0f));
 
         if (!Physics.Raycast(raycastRay, out var hit, maxRaycastDistance, raycastMask))
@@ -239,6 +254,50 @@ public class PlayerInteractor : MonoBehaviour
         return best;
     }
 
+    private void UpdateMinigameReentry()
+    {
+        if (minigameBlocked.Count == 0)
+            return;
+
+        minigameInside.Clear();
+        var hits = GetEnemyCandidates();
+        if (hits != null)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                var enemy = hits[i].GetComponentInParent<EnemyMaskStackVisual>();
+                if (enemy != null)
+                    minigameInside.Add(enemy);
+            }
+        }
+
+        minigameRemove.Clear();
+        foreach (var enemy in minigameBlocked)
+        {
+            if (enemy == null || !minigameInside.Contains(enemy))
+                minigameRemove.Add(enemy);
+        }
+
+        for (int i = 0; i < minigameRemove.Count; i++)
+            minigameBlocked.Remove(minigameRemove[i]);
+    }
+
+    public void BlockMinigameUntilExit(EnemyMaskStackVisual enemy)
+    {
+        if (enemy == null)
+            return;
+
+        minigameBlocked.Add(enemy);
+    }
+
+    public bool IsMinigameBlocked(EnemyMaskStackVisual enemy)
+    {
+        if (enemy == null)
+            return false;
+
+        return minigameBlocked.Contains(enemy);
+    }
+
     private static bool IsArrowKey(KeyCode key)
     {
         return key == KeyCode.LeftArrow ||
@@ -257,6 +316,60 @@ public class PlayerInteractor : MonoBehaviour
 
         var control = Keyboard.current[key];
         return control != null && control.wasPressedThisFrame;
+    }
+
+    private void ResolveInputActions()
+    {
+        var asset = GetInputActionAsset();
+        leftActionRuntime = ResolveAction(asset, leftAction, "LeftArrow");
+        rightActionRuntime = ResolveAction(asset, rightAction, "RightArrow");
+        upActionRuntime = ResolveAction(asset, upAction, "UpArrow");
+        downActionRuntime = ResolveAction(asset, downAction, "DownArrow");
+        clickActionRuntime = ResolveAction(asset, clickAction, "LeftClick");
+        pointerPositionActionRuntime = ResolveAction(asset, pointerPositionAction, "PointerPosition");
+    }
+
+    private InputActionAsset GetInputActionAsset()
+    {
+        var playerInput = GetComponent<PlayerInput>();
+        if (playerInput != null && playerInput.actions != null)
+            return playerInput.actions;
+
+        if (leftAction != null && leftAction.action != null)
+            return leftAction.action.actionMap != null ? leftAction.action.actionMap.asset : null;
+
+        return null;
+    }
+
+    private static InputAction ResolveAction(InputActionAsset asset, InputActionReference reference, string actionName)
+    {
+        if (asset != null)
+        {
+            var action = asset.FindAction(actionName, false);
+            if (action != null)
+                return action;
+
+            action = asset.FindAction($"Player/{actionName}", false);
+            if (action != null)
+                return action;
+        }
+
+        if (reference != null)
+            return reference.action;
+
+        return null;
+    }
+
+    private static void EnableAction(InputAction action)
+    {
+        if (action != null && !action.enabled)
+            action.Enable();
+    }
+
+    private static void DisableAction(InputAction action)
+    {
+        if (action != null && action.enabled)
+            action.Disable();
     }
 
     private static bool TryMapKeyCode(KeyCode keyCode, out Key key)

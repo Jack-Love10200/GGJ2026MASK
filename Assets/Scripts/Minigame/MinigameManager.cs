@@ -145,6 +145,9 @@ public class MinigameManager : MonoBehaviour
         if (activeMinigame == null)
             return;
 
+        if (!success && activeContext != null && activeContext.player != null && activeContext.enemy != null)
+            activeContext.player.BlockMinigameUntilExit(activeContext.enemy);
+
         if (success)
             activeContext?.onSuccess?.Invoke();
         else

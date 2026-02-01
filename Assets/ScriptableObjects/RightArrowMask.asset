@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: RightArrowMask
   m_EditorClassIdentifier: Assembly-CSharp::MaskDef
   debugName: RightArrowMask
-  icon: {fileID: 21300000, guid: e8b54a78137239e4793a377787ddbd87, type: 3}
+  maskSprite: {fileID: 21300000, guid: 3d7b1aa7a22c8054d8c0a8012eb34755, type: 3}
+  indicatorSprite: {fileID: 21300000, guid: e8b54a78137239e4793a377787ddbd87, type: 3}
   unlockAction: {fileID: 11400000, guid: 0627c48ef7367264ab24b22cc780efbd, type: 2}
