@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public enum GameState
 {
     MainMenu,
+    Win,
     Playing,
     Paused,
     GameOver
