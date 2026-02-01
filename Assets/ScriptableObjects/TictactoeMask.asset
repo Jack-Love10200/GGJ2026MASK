@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: TictactoeMask
   m_EditorClassIdentifier: Assembly-CSharp::MaskDef
   debugName: tictactoeMask
-  icon: {fileID: 21300000, guid: 28d2ed7e9a9bd0f4e91688aa19d9f325, type: 3}
+  maskSprite: {fileID: 21300000, guid: 28d2ed7e9a9bd0f4e91688aa19d9f325, type: 3}
+  indicatorSprite: {fileID: 21300000, guid: ccf735fe3274eb347bc03712a6e3294c, type: 3}
   unlockAction: {fileID: 11400000, guid: f0c8290d0a33e5345b4359ec4ca567f6, type: 2}

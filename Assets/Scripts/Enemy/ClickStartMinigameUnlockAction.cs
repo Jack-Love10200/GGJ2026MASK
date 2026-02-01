@@ -64,6 +64,13 @@ public class ClickStartMinigameUnlockAction : MaskUnlockAction
             }
         }
 
+        if (ctx.player != null && ctx.enemy != null && ctx.player.IsMinigameBlocked(ctx.enemy))
+        {
+            if (debugInteractions)
+                Debug.Log($"{nameof(ClickStartMinigameUnlockAction)}: Blocked until player exits collider.", ctx.enemy);
+            return;
+        }
+
         var manager = MinigameManager.Instance;
         if (manager == null)
         {
