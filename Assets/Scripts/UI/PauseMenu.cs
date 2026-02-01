@@ -1,11 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
+    [Header("Timer")]
+    public TextMeshProUGUI timerLabel;
+
     [Header("Post-Processing")]
     public Volume crtVolume;
     public float transitionDuration = 0.1f;
@@ -23,6 +28,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject quitConfirmationPrefab;
 
     private PauseManager pauseManager;
+    private GameTimer gameTimer;
     private Coroutine fadeCoroutine;
     private List<GameObject> Submenus = new List<GameObject>();
 
@@ -34,11 +40,14 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         pauseManager = FindAnyObjectByType<PauseManager>();
+        gameTimer = FindAnyObjectByType<GameTimer>();
 
         resumeButton.onClick.AddListener(ResumeButton);
         optionsButton.onClick.AddListener(OptionsButton);
         mainMenuButton.onClick.AddListener(MainMenuButton);
         quitButton.onClick.AddListener(QuitButton);
+
+        UpdateTimerLabel();
     }
 
     void Update()
@@ -97,6 +106,50 @@ public class PauseMenu : MonoBehaviour
 
         Submenus.Clear();
     }
+
+    #region Timer
+    public void UpdateTimerLabel()
+    {
+        string timerOutput = "";
+        timerOutput += "-" + gameTimer.GetCurrentTime() + "\n";
+        timerOutput += GetRealWorldTime();
+
+        timerLabel.text = timerOutput;
+    }
+
+    string GetRealWorldTime()
+    {
+        DateTime now = DateTime.Now;
+
+        string timePart = now.ToString("tt hh:mm");
+        string month = now.ToString("MMM");
+        string year = now.ToString("yyyy");
+        string day = now.Day.ToString();
+        string suffix = GetDaySuffix(now.Day);
+        string datePart = $"{month} {day}{suffix} {year}";
+        return $"{timePart}\n{datePart}";
+    }
+
+    string GetDaySuffix(int day)
+    {
+        if (day % 100 >= 11 && day % 100 <= 13)
+        {
+            return "th";
+        }
+
+        switch (day % 10)
+        {
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
+        }
+    }
+    #endregion
 
     #region Post Processing Volume
     private IEnumerator AnimateVolumeWeight(float targetWeight)
