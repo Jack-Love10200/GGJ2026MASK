@@ -583,6 +583,94 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             ]
         },
         {
+            ""name"": ""Debug"",
+            ""id"": ""39e28c83-793d-4f8a-918b-92e90d343e78"",
+            ""actions"": [
+                {
+                    ""name"": ""DebugIncreaseComboScore"",
+                    ""type"": ""Button"",
+                    ""id"": ""3e64d46f-90cb-4cf8-a190-d127e146e6dc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DebugDecreaseComboScore"",
+                    ""type"": ""Button"",
+                    ""id"": ""4bfaa431-7152-4a8e-a378-b59f0a23cd6e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DebugIncreaseComboLevel"",
+                    ""type"": ""Button"",
+                    ""id"": ""b446d46d-37d6-44d6-b4a5-b71716d58d2f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DebugDecreaseComboLevel"",
+                    ""type"": ""Button"",
+                    ""id"": ""4aa81c2f-cdc8-452f-90b6-d3ea7fab1f87"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""8fc2e160-6896-4c11-8530-93c1148259e5"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DebugIncreaseComboScore"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""333a36c2-1873-489d-8a02-8005f972149d"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DebugDecreaseComboScore"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6acbc724-ced0-42f8-9a37-8a6f4dbb90d5"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DebugIncreaseComboLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f70f5c37-066f-4a9e-8779-98d185006b8a"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DebugDecreaseComboLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""UI"",
             ""id"": ""272f6d14-89ba-496f-b7ff-215263d3219f"",
             ""actions"": [
@@ -1205,6 +1293,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Left = m_Player.FindAction("Left", throwIfNotFound: true);
+        // Debug
+        m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+        m_Debug_DebugIncreaseComboScore = m_Debug.FindAction("DebugIncreaseComboScore", throwIfNotFound: true);
+        m_Debug_DebugDecreaseComboScore = m_Debug.FindAction("DebugDecreaseComboScore", throwIfNotFound: true);
+        m_Debug_DebugIncreaseComboLevel = m_Debug.FindAction("DebugIncreaseComboLevel", throwIfNotFound: true);
+        m_Debug_DebugDecreaseComboLevel = m_Debug.FindAction("DebugDecreaseComboLevel", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1223,6 +1317,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     ~@InputSystem_Actions()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Debug.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Debug.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, InputSystem_Actions.UI.Disable() has not been called.");
     }
 
@@ -1490,6 +1585,135 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Debug
+    private readonly InputActionMap m_Debug;
+    private List<IDebugActions> m_DebugActionsCallbackInterfaces = new List<IDebugActions>();
+    private readonly InputAction m_Debug_DebugIncreaseComboScore;
+    private readonly InputAction m_Debug_DebugDecreaseComboScore;
+    private readonly InputAction m_Debug_DebugIncreaseComboLevel;
+    private readonly InputAction m_Debug_DebugDecreaseComboLevel;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Debug".
+    /// </summary>
+    public struct DebugActions
+    {
+        private @InputSystem_Actions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public DebugActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Debug/DebugIncreaseComboScore".
+        /// </summary>
+        public InputAction @DebugIncreaseComboScore => m_Wrapper.m_Debug_DebugIncreaseComboScore;
+        /// <summary>
+        /// Provides access to the underlying input action "Debug/DebugDecreaseComboScore".
+        /// </summary>
+        public InputAction @DebugDecreaseComboScore => m_Wrapper.m_Debug_DebugDecreaseComboScore;
+        /// <summary>
+        /// Provides access to the underlying input action "Debug/DebugIncreaseComboLevel".
+        /// </summary>
+        public InputAction @DebugIncreaseComboLevel => m_Wrapper.m_Debug_DebugIncreaseComboLevel;
+        /// <summary>
+        /// Provides access to the underlying input action "Debug/DebugDecreaseComboLevel".
+        /// </summary>
+        public InputAction @DebugDecreaseComboLevel => m_Wrapper.m_Debug_DebugDecreaseComboLevel;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Debug; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="DebugActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="DebugActions" />
+        public void AddCallbacks(IDebugActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DebugActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DebugActionsCallbackInterfaces.Add(instance);
+            @DebugIncreaseComboScore.started += instance.OnDebugIncreaseComboScore;
+            @DebugIncreaseComboScore.performed += instance.OnDebugIncreaseComboScore;
+            @DebugIncreaseComboScore.canceled += instance.OnDebugIncreaseComboScore;
+            @DebugDecreaseComboScore.started += instance.OnDebugDecreaseComboScore;
+            @DebugDecreaseComboScore.performed += instance.OnDebugDecreaseComboScore;
+            @DebugDecreaseComboScore.canceled += instance.OnDebugDecreaseComboScore;
+            @DebugIncreaseComboLevel.started += instance.OnDebugIncreaseComboLevel;
+            @DebugIncreaseComboLevel.performed += instance.OnDebugIncreaseComboLevel;
+            @DebugIncreaseComboLevel.canceled += instance.OnDebugIncreaseComboLevel;
+            @DebugDecreaseComboLevel.started += instance.OnDebugDecreaseComboLevel;
+            @DebugDecreaseComboLevel.performed += instance.OnDebugDecreaseComboLevel;
+            @DebugDecreaseComboLevel.canceled += instance.OnDebugDecreaseComboLevel;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="DebugActions" />
+        private void UnregisterCallbacks(IDebugActions instance)
+        {
+            @DebugIncreaseComboScore.started -= instance.OnDebugIncreaseComboScore;
+            @DebugIncreaseComboScore.performed -= instance.OnDebugIncreaseComboScore;
+            @DebugIncreaseComboScore.canceled -= instance.OnDebugIncreaseComboScore;
+            @DebugDecreaseComboScore.started -= instance.OnDebugDecreaseComboScore;
+            @DebugDecreaseComboScore.performed -= instance.OnDebugDecreaseComboScore;
+            @DebugDecreaseComboScore.canceled -= instance.OnDebugDecreaseComboScore;
+            @DebugIncreaseComboLevel.started -= instance.OnDebugIncreaseComboLevel;
+            @DebugIncreaseComboLevel.performed -= instance.OnDebugIncreaseComboLevel;
+            @DebugIncreaseComboLevel.canceled -= instance.OnDebugIncreaseComboLevel;
+            @DebugDecreaseComboLevel.started -= instance.OnDebugDecreaseComboLevel;
+            @DebugDecreaseComboLevel.performed -= instance.OnDebugDecreaseComboLevel;
+            @DebugDecreaseComboLevel.canceled -= instance.OnDebugDecreaseComboLevel;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DebugActions.UnregisterCallbacks(IDebugActions)" />.
+        /// </summary>
+        /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+        public void RemoveCallbacks(IDebugActions instance)
+        {
+            if (m_Wrapper.m_DebugActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+        /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+        /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+        public void SetCallbacks(IDebugActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DebugActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DebugActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="DebugActions" /> instance referencing this action map.
+    /// </summary>
+    public DebugActions @Debug => new DebugActions(this);
 
     // UI
     private readonly InputActionMap m_UI;
@@ -1838,6 +2062,42 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLeft(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Debug" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+    /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+    public interface IDebugActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "DebugIncreaseComboScore" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDebugIncreaseComboScore(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DebugDecreaseComboScore" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDebugDecreaseComboScore(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DebugIncreaseComboLevel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDebugIncreaseComboLevel(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DebugDecreaseComboLevel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDebugDecreaseComboLevel(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

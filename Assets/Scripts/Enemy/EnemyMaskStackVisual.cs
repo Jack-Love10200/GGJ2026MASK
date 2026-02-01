@@ -80,7 +80,11 @@ public class EnemyMaskStackVisual : MonoBehaviour
             return false;
 
         RemoveTopLayer();
+
+        // Track killing
         comboManager?.TrackEnemyFinished(1);
+        LevelScopeManagers.Instance.GetComponent<ScoreManager>().TrackKill();
+
         if (layers.Count == 0)
             HandleAllMasksRemoved();
         return true;

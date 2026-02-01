@@ -89,6 +89,35 @@ public class ComboManager : MonoBehaviour
         }
         return mComboLevelSettings.mComboLevelNames[mCurrComboLevel];
     }
+
+    public void DebugIncreaseComboValue(float amountToIncreaseCombo)
+    {
+        IncreaseComboValue(amountToIncreaseCombo);
+    }
+
+    public void DebugDecreaseComboValue(float amountToDecreaseCombo)
+    {
+        IncreaseComboValue(-1.0f * amountToDecreaseCombo);
+
+    }
+
+    public void DebugIncrementComboLevel()
+    {
+        // if there are more combo levels
+        if (mCurrComboLevel + 1 < mComboLevelSettings.mComboLevelThresholds.Count - 1)
+        {
+            IncreaseComboValue(mComboLevelSettings.mComboLevelThresholds[mCurrComboLevel + 1] - mCurrComboValue);
+        }
+    }
+    public void DebugDecrementComboLevel()
+    {
+        // if there are more combo levels
+        if (mCurrComboLevel - 1 > 0)
+        {
+            IncreaseComboValue(-1 * (mCurrComboValue - mComboLevelSettings.mComboLevelThresholds[mCurrComboLevel - 1]) - 1);
+        }
+    }
+
     // Private functions
 
     void IncreaseComboValue(float amountToIncreaseCombo)
@@ -101,6 +130,7 @@ public class ComboManager : MonoBehaviour
 
         }
     }
+
 
     // Recalculates combo level
     // returns true if combo level changed, false otherwise
