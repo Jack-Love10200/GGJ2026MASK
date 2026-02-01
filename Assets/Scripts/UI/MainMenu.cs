@@ -31,12 +31,14 @@ public class MainMenu : MonoBehaviour
 
     public void PlayButton()
     {
-        SceneManager.LoadScene("TestingScene");
+        SceneManager.LoadScene("Level");
     }
     
     public void OptionsButton()
     {
-        Instantiate(optionsMenuPrefab, submenusParent);
+        GameObject options = Instantiate(optionsMenuPrefab, submenusParent);
+        options.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        options.transform.GetChild(0).gameObject.SetActive(true);
     }
 
     public void CreditsButton()
