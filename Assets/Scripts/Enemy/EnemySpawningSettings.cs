@@ -10,9 +10,10 @@ public class EnemySpawningSettings : ScriptableObject
         Sequence
     }
 
+    [System.Serializable]
     public class EnemyTypeSettings
     {
-        EnemyClass EnemyClass = EnemyClass.NonEvent;
+        public EnemyClass EnemyClass = EnemyClass.NonEvent;
 
         [Header("Initial Masks (Bottom -> Top)")]
         public List<MaskDef> initialMasksBottomToTop = new List<MaskDef>();

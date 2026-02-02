@@ -9,7 +9,10 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [SerializeField] private Transform faceSocket;
     [SerializeField] private SpriteRenderer bodyRenderer;
     [SerializeField] private Transform indicatorSocket;
-    [SerializeField] private Transform leftShoulderSocket;
+    [SerializeField] private Transform leftShoulderSocket; 
+    [SerializeField] private GameObject MaskPrefab;
+    [SerializeField] private Material arrowMaterial;
+
 
     [Header("Initial Masks (Bottom -> Top)")]
     [SerializeField] private List<MaskDef> initialMasksBottomToTop = new List<MaskDef>();
@@ -33,6 +36,8 @@ public class EnemyMaskStackVisual : MonoBehaviour
     private ComboManager comboManager;
     private NavMeshAgent cachedAgent;
     private SpriteRenderer indicatorRenderer;
+
+    static bool useNonPrefabIndicator = false;
 
     private struct MaskLayer
     {
@@ -248,20 +253,31 @@ public class EnemyMaskStackVisual : MonoBehaviour
             return false;
         }
 
-        var root = new GameObject($"MaskLayer_{index}");
+
+        var root = GameObject.Instantiate(MaskPrefab);
+        root.name = $"MaskLayer_{index}";
         root.transform.SetParent(faceSocket, false);
 
-        var spriteRenderer = root.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = def.maskSprite;
+        SpriteRenderer spriteRenderer = root.GetComponent<SpriteRenderer>();
 
-        if (bodyRenderer != null)
-        {
-            spriteRenderer.sortingLayerID = bodyRenderer.sortingLayerID;
-        }
-        else if (!string.IsNullOrWhiteSpace(sortingLayerName))
-        {
-            spriteRenderer.sortingLayerName = sortingLayerName;
-        }
+        GameObject arrow = new GameObject("Arrow");
+        arrow.transform.SetParent(root.transform);
+        arrow.transform.localPosition = new Vector3(0, 0, 0.1f);
+
+        SpriteRenderer arrowRenderer = arrow.AddComponent<SpriteRenderer>();
+        arrowRenderer.sprite = def.indicatorSprite;
+        arrowRenderer.material = arrowMaterial;
+
+        arrowRenderer.sortingOrder = spriteRenderer.sortingOrder + 1;
+
+        //if (bodyRenderer != null)
+        //{
+        //    spriteRenderer.sortingLayerID = bodyRenderer.sortingLayerID;
+        //}
+        //else if (!string.IsNullOrWhiteSpace(sortingLayerName))
+        //{
+        //    spriteRenderer.sortingLayerName = sortingLayerName;
+        //}
 
         spriteRenderer.sortingOrder = baseSortingOrder + index;
 
@@ -377,6 +393,17 @@ public class EnemyMaskStackVisual : MonoBehaviour
         if (!EnsureIndicator())
             return;
 
+        // Use only indicators on prefab normally, but allow for old sprite renderer indicator
+        if (useNonPrefabIndicator == false)
+        {
+            indicatorRenderer.enabled = false;
+            return;
+        }
+        //else
+        //{
+        //    indicatorRenderer.enabled = true;
+        //}
+
         if (layers.Count == 0)
         {
             indicatorRenderer.enabled = false;
@@ -398,7 +425,16 @@ public class EnemyMaskStackVisual : MonoBehaviour
         }
 
         indicatorRenderer.sprite = sprite;
-        indicatorRenderer.enabled = true;
+        // Use only indicators on prefab normally, but allow for old sprite renderer indicator
+        if (useNonPrefabIndicator == true)
+        {
+            indicatorRenderer.enabled = false;
+
+        }
+        else
+        {
+            indicatorRenderer.enabled = true;
+        }
         ApplyIndicatorSorting();
     }
 
