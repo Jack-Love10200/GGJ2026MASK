@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca408340a8d8d44eabf8b364b960674, type: 3}
   m_Name: GameTimeSettings
   m_EditorClassIdentifier: Assembly-CSharp::GameTimeSettings
-  StartingTime: 20
+  StartingTime: 120
