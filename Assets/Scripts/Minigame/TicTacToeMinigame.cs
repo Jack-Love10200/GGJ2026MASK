@@ -15,6 +15,8 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
     [SerializeField] private GameObject winVfxPrefab;
     [SerializeField] private GameObject loseVfxPrefab;
     [SerializeField] private GameObject drawVfxPrefab;
+    [Header("Local SFX (optional)")]
+    [SerializeField] private bool useLocalSfx = false;
     [SerializeField] private AudioClip winSfx;
     [SerializeField] private AudioClip loseSfx;
     [SerializeField] private AudioClip drawSfx;
@@ -243,26 +245,19 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
         aiMovePending = false;
         aiMoveTimer = 0f;
 
-        if (sfxSource == null)
-            sfxSource = GetComponent<AudioSource>();
-
         GameObject vfxPrefab = null;
-        AudioClip clip = null;
 
         if (isDraw)
         {
             vfxPrefab = drawVfxPrefab;
-            clip = drawSfx;
         }
         else if (playerWon)
         {
             vfxPrefab = winVfxPrefab;
-            clip = winSfx;
         }
         else
         {
             vfxPrefab = loseVfxPrefab;
-            clip = loseSfx;
         }
 
         if (vfxPrefab != null)
@@ -271,22 +266,40 @@ public class TicTacToeMinigame : MonoBehaviour, IMinigame
             Instantiate(vfxPrefab, root);
         }
 
-        if (clip != null && sfxSource != null)
-            sfxSource.PlayOneShot(clip);
+        if (useLocalSfx)
+        {
+            if (sfxSource == null)
+                sfxSource = GetComponent<AudioSource>();
+
+            AudioClip clip = null;
+            if (isDraw)
+                clip = drawSfx;
+            else if (playerWon)
+                clip = winSfx;
+            else
+                clip = loseSfx;
+
+            if (clip != null && sfxSource != null)
+                sfxSource.PlayOneShot(clip);
+        }
+
+        MinigameResult result = isDraw
+            ? MinigameResult.Draw
+            : playerWon ? MinigameResult.Win : MinigameResult.Lose;
 
         if (resultDelaySeconds <= 0f)
         {
-            MinigameManager.Instance?.EndMinigame(playerWon);
+            MinigameManager.Instance?.EndMinigame(result);
             return;
         }
 
-        StartCoroutine(EndAfterDelay(playerWon, resultDelaySeconds));
+        StartCoroutine(EndAfterDelay(result, resultDelaySeconds));
     }
 
-    private System.Collections.IEnumerator EndAfterDelay(bool success, float delay)
+    private System.Collections.IEnumerator EndAfterDelay(MinigameResult result, float delay)
     {
         yield return new WaitForSeconds(delay);
-        MinigameManager.Instance?.EndMinigame(success);
+        MinigameManager.Instance?.EndMinigame(result);
     }
 
     private bool IsBoardFull()
