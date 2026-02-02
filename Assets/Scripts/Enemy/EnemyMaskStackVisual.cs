@@ -12,6 +12,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [SerializeField] private Transform leftShoulderSocket; 
     [SerializeField] private GameObject MaskPrefab;
     [SerializeField] private Material arrowMaterial;
+    [SerializeField] private Material maskMaterial;
 
 
     [Header("Initial Masks (Bottom -> Top)")]
@@ -286,6 +287,8 @@ public class EnemyMaskStackVisual : MonoBehaviour
 
         var spriteRenderer = root.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = def.maskSprite;
+        spriteRenderer.drawMode = SpriteDrawMode.Simple;
+        //spriteRenderer.material = maskMaterial;
 
         if (bodyRenderer != null)
         {

@@ -244,6 +244,7 @@ MonoBehaviour:
   leftShoulderSocket: {fileID: 0}
   MaskPrefab: {fileID: 0}
   arrowMaterial: {fileID: 2100000, guid: f9e5dd49530997b41bdda41e3aa2cd3c, type: 2}
+  maskMaterial: {fileID: 2100000, guid: 80c148121f9c032448df78a8f5e95190, type: 2}
   initialMasksBottomToTop:
   - {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
   - {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}

@@ -16,10 +16,10 @@ MonoBehaviour:
   - EnemyClass: 1
     initialMasksBottomToTop:
     - {fileID: 11400000, guid: 2bd402e72a799a54abec83da61498107, type: 2}
-    desiredNumberMin: 10
-    desiredNumberMax: 15
+    desiredNumberMin: 30
+    desiredNumberMax: 40
   - EnemyClass: 1
     initialMasksBottomToTop:
     - {fileID: 11400000, guid: 5e1b9a8cc7bcc3142ab30c4242f31fdf, type: 2}
-    desiredNumberMin: 10
-    desiredNumberMax: 15
+    desiredNumberMin: 30
+    desiredNumberMax: 40
