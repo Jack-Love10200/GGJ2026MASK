@@ -21,6 +21,10 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [SerializeField] private int baseSortingOrder = 5;
     [SerializeField] private string sortingLayerName = "";
     [SerializeField] private int indicatorSortingOffset = 10;
+    [Header("SFX")]
+    [SerializeField] private bool playPopSfx = true;
+    [SerializeField] private AudioSource popSfxSource;
+    [SerializeField] private bool fallbackPlayClipAtPoint = true;
 
     [Header("Jitter")]
     [SerializeField] private Vector2 positionJitter = new Vector2(0.02f, 0.02f);
@@ -156,6 +160,8 @@ public class EnemyMaskStackVisual : MonoBehaviour
         if (layers.Count == 0)
             return false;
 
+        var top = layers[layers.Count - 1];
+        PlayPopSfx(top.def);
         RemoveTopLayer();
         RefreshIndicator();
 
@@ -172,6 +178,27 @@ public class EnemyMaskStackVisual : MonoBehaviour
     {
         // TODO: play VFX/SFX before destroying the enemy.
         Destroy(gameObject);
+    }
+
+    private void PlayPopSfx(MaskDef def)
+    {
+        if (!playPopSfx || def == null)
+            return;
+
+        if (!def.TryGetRandomPopSfx(out var clip, out float volume))
+            return;
+
+        if (popSfxSource == null)
+            popSfxSource = GetComponent<AudioSource>();
+
+        if (popSfxSource != null)
+        {
+            popSfxSource.PlayOneShot(clip, volume);
+            return;
+        }
+
+        if (fallbackPlayClipAtPoint)
+            AudioSource.PlayClipAtPoint(clip, transform.position, volume);
     }
 
     public void ResetToInitial()

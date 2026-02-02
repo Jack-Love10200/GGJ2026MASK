@@ -16,3 +16,9 @@ MonoBehaviour:
   maskSprite: {fileID: 21300000, guid: 3d7b1aa7a22c8054d8c0a8012eb34755, type: 3}
   indicatorSprite: {fileID: 21300000, guid: 1a1bcfafcb579404490096e2376f6cc2, type: 3}
   unlockAction: {fileID: 11400000, guid: 8121109cc42392d44b356a4802444f69, type: 2}
+  popSfx:
+  - {fileID: 8300000, guid: 8c5cfa8b5b7a8c64ba0cfedd2f8d51b0, type: 3}
+  - {fileID: 8300000, guid: cf8107ae8433f884fba617829e19687a, type: 3}
+  - {fileID: 8300000, guid: 812742c145c049941a1643dafe8d9df0, type: 3}
+  - {fileID: 8300000, guid: c1b0751932af61a49806d89c7e490fca, type: 3}
+  popSfxVolume: 1
