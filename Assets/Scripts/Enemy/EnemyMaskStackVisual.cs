@@ -23,8 +23,6 @@ public class EnemyMaskStackVisual : MonoBehaviour
     [SerializeField] private int indicatorSortingOffset = 10;
     [Header("SFX")]
     [SerializeField] private bool playPopSfx = true;
-    [SerializeField] private AudioSource popSfxSource;
-    [SerializeField] private bool fallbackPlayClipAtPoint = true;
 
     [Header("Jitter")]
     [SerializeField] private Vector2 positionJitter = new Vector2(0.02f, 0.02f);
@@ -188,17 +186,9 @@ public class EnemyMaskStackVisual : MonoBehaviour
         if (!def.TryGetRandomPopSfx(out var clip, out float volume))
             return;
 
-        if (popSfxSource == null)
-            popSfxSource = GetComponent<AudioSource>();
-
-        if (popSfxSource != null)
-        {
-            popSfxSource.PlayOneShot(clip, volume);
-            return;
-        }
-
-        if (fallbackPlayClipAtPoint)
-            AudioSource.PlayClipAtPoint(clip, transform.position, volume);
+        var audioManager = AudioManager.Instance;
+        if (audioManager != null)
+            audioManager.PlaySfx(clip, volume);
     }
 
     public void ResetToInitial()

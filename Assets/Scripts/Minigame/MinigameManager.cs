@@ -41,7 +41,6 @@ public class MinigameManager : MonoBehaviour
 
     [Header("SFX")]
     [SerializeField] private bool playResultSfx = true;
-    [SerializeField] private AudioSource resultSfxSource;
     [SerializeField] private AudioClip winResultSfx;
     [SerializeField] private AudioClip loseResultSfx;
     [SerializeField] private AudioClip drawResultSfx;
@@ -193,13 +192,12 @@ public class MinigameManager : MonoBehaviour
         if (clip == null)
             return;
 
-        if (resultSfxSource == null)
-            resultSfxSource = GetComponent<AudioSource>();
-
-        if (resultSfxSource == null)
+        var audioManager = AudioManager.Instance;
+        if (audioManager != null)
+        {
+            audioManager.PlaySfx(clip, 1f);
             return;
-
-        resultSfxSource.PlayOneShot(clip);
+        }
     }
 
     public void CancelActive()
