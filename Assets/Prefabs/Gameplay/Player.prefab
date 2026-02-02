@@ -712,6 +712,10 @@ MonoBehaviour:
   maskFlingGravity: 4
   maskFlingDuration: 0.7
   maskFlingSpinDegPerSec: 360
+  useScreenSpaceFling: 1
+  screenSpaceDepth: 3
+  screenSpaceScale: 1.1
+  maskFlingCamera: {fileID: 0}
   leftHand: {fileID: 4549970897930912052}
   rightHand: {fileID: 814333044435726288}
   leftReadyPos: {fileID: 7380875468726374765}

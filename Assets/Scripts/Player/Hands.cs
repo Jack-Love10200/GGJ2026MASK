@@ -40,6 +40,21 @@ public class Hands : MonoBehaviour
     public float maskFlingGravity = 4f;
     public float maskFlingDuration = 0.7f;
     public float maskFlingSpinDegPerSec = 360f;
+    [Header("Mask Fling Chaos")]
+    public float maskFlingRandomSpreadDeg = 12f;
+    public float maskFlingWobbleAmplitude = 0.12f;
+    public float maskFlingWobbleFrequency = 16f;
+    public float maskFlingWobbleDamping = 1.5f;
+    public float maskFlingSpinJitterDegPerSec = 240f;
+    [Header("Mask Fling Screen Space")]
+    public bool useScreenSpaceFling = true;
+    public float screenSpaceDepth = 1.6f;
+    public float screenSpaceScale = 1.1f;
+    [Range(0f, 1f)]
+    public float screenSpaceOutwardBias = 0.75f;
+    [Range(0f, 1f)]
+    public float screenSpaceForwardBias = 0.25f;
+    public Camera maskFlingCamera;
 
     [Header("References")]
     public Transform leftHand;
@@ -359,11 +374,8 @@ public class Hands : MonoBehaviour
         if (visual.sprite == null)
             return;
 
-        if (leftImpulseActive || rightImpulseActive)
-            return;
-
-        bool canUseLeft = leftHand != null && !leftExternalControl;
-        bool canUseRight = rightHand != null && !rightExternalControl;
+        bool canUseLeft = leftHand != null && !leftExternalControl && !leftImpulseActive;
+        bool canUseRight = rightHand != null && !rightExternalControl && !rightImpulseActive;
 
         if (!canUseLeft && !canUseRight)
             return;
@@ -374,6 +386,10 @@ public class Hands : MonoBehaviour
             float leftDist = Vector3.Distance(leftHand.position, visual.position);
             float rightDist = Vector3.Distance(rightHand.position, visual.position);
             useLeft = leftDist <= rightDist;
+        }
+        else if (!canUseLeft)
+        {
+            useLeft = false;
         }
 
         if (useLeft)
@@ -417,23 +433,26 @@ public class Hands : MonoBehaviour
 
         hand.rotation = fixedRotation;
         SetBasePose(isLeft, HandPose.Grab);
-        GameObject clone = SpawnMaskClone(visual);
-        if (clone != null)
+        Camera flingCam = ResolveFlingCamera();
+        bool screenSpaceFling = useScreenSpaceFling && flingCam != null;
+        GameObject clone = SpawnMaskClone(
+            visual,
+            enemyTransform,
+            hand,
+            flingCam,
+            screenSpaceFling,
+            out Vector3 throwDir,
+            out Vector3 upDir,
+            out float spinDegPerSec,
+            out float wobblePhase);
+        if (clone != null && !screenSpaceFling)
             clone.transform.SetParent(hand, true);
 
         if (maskHoldSeconds > 0f)
             yield return new WaitForSeconds(maskHoldSeconds);
 
-        if (clone != null)
+        if (clone != null && !screenSpaceFling)
             clone.transform.SetParent(null, true);
-
-        Vector3 throwDir = hand.forward;
-        if (enemyTransform != null)
-            throwDir = (hand.position - enemyTransform.position);
-
-        if (throwDir.sqrMagnitude < 0.0001f)
-            throwDir = hand.forward;
-        throwDir.Normalize();
 
         RestoreHandParent(hand, originalParent);
         SetReturnTargets(isLeft);
@@ -443,36 +462,123 @@ public class Hands : MonoBehaviour
         else rightImpulseActive = false;
 
         if (clone != null)
-            yield return FlingMask(clone, throwDir);
+            yield return FlingMask(clone, throwDir, upDir, spinDegPerSec, wobblePhase);
     }
 
-    private GameObject SpawnMaskClone(EnemyMaskStackVisual.MaskVisualData visual)
+    private GameObject SpawnMaskClone(
+        EnemyMaskStackVisual.MaskVisualData visual,
+        Transform enemyTransform,
+        Transform hand,
+        Camera flingCam,
+        bool screenSpaceFling,
+        out Vector3 throwDir,
+        out Vector3 upDir,
+        out float spinDegPerSec,
+        out float wobblePhase)
     {
+        throwDir = Vector3.forward;
+        if (hand != null)
+            throwDir = hand.forward;
+        if (enemyTransform != null && hand != null)
+            throwDir = (hand.position - enemyTransform.position);
+
+        if (throwDir.sqrMagnitude < 0.0001f)
+            throwDir = hand != null ? hand.forward : Vector3.forward;
+        throwDir.Normalize();
+
+        upDir = Vector3.up;
+        spinDegPerSec = maskFlingSpinDegPerSec + Random.Range(-maskFlingSpinJitterDegPerSec, maskFlingSpinJitterDegPerSec);
+        wobblePhase = Random.Range(0f, Mathf.PI * 2f);
+
         var clone = new GameObject("MaskFlingClone");
         var renderer = clone.AddComponent<SpriteRenderer>();
         renderer.sprite = visual.sprite;
         renderer.sortingLayerID = visual.sortingLayerID;
         renderer.sortingOrder = visual.sortingOrder + 1;
 
-        clone.transform.position = visual.position;
-        clone.transform.rotation = visual.rotation;
+        Vector3 position = visual.position;
+        Quaternion rotation = visual.rotation;
         Vector3 scale = visual.lossyScale;
         if (scale.sqrMagnitude < 0.0001f)
             scale = Vector3.one;
+
+        if (screenSpaceFling && flingCam != null)
+        {
+            Vector3 screen = flingCam.WorldToScreenPoint(visual.position);
+            float depth = Mathf.Max(0.01f, screenSpaceDepth);
+            position = flingCam.ScreenToWorldPoint(new Vector3(screen.x, screen.y, depth));
+            if (screen.z < 0f)
+                position = flingCam.transform.position + flingCam.transform.forward * depth;
+
+            if (Mathf.Abs(screenSpaceScale - 1f) > 0.0001f)
+                scale *= screenSpaceScale;
+
+            Vector3 planeDir = Vector3.ProjectOnPlane(throwDir, flingCam.transform.forward);
+            if (planeDir.sqrMagnitude < 0.0001f)
+                planeDir = flingCam.transform.right;
+            planeDir.Normalize();
+
+            Vector3 outwardDir = GetScreenOutwardDir(flingCam, screen);
+            if (outwardDir.sqrMagnitude < 0.0001f)
+                outwardDir = planeDir;
+            outwardDir.Normalize();
+
+            Vector3 blended = Vector3.Slerp(planeDir, outwardDir, screenSpaceOutwardBias);
+            if (screenSpaceForwardBias > 0f)
+                blended = (blended + flingCam.transform.forward * screenSpaceForwardBias).normalized;
+
+            throwDir = blended;
+            upDir = flingCam.transform.up;
+
+            float z = visual.rotation.eulerAngles.z;
+            rotation = Quaternion.AngleAxis(z, flingCam.transform.forward) * flingCam.transform.rotation;
+        }
+
+        Vector3 right = Vector3.Cross(upDir, throwDir);
+        if (right.sqrMagnitude < 0.0001f)
+            right = Vector3.Cross(Vector3.up, throwDir);
+        right = right.sqrMagnitude > 0.0001f ? right.normalized : Vector3.right;
+
+        if (maskFlingRandomSpreadDeg > 0f)
+        {
+            float yaw = Random.Range(-maskFlingRandomSpreadDeg, maskFlingRandomSpreadDeg);
+            float pitch = Random.Range(-maskFlingRandomSpreadDeg, maskFlingRandomSpreadDeg) * 0.5f;
+            Quaternion spread = Quaternion.AngleAxis(yaw, upDir) * Quaternion.AngleAxis(pitch, right);
+            throwDir = (spread * throwDir).normalized;
+        }
+
+        clone.transform.position = position;
+        clone.transform.rotation = rotation;
         clone.transform.localScale = scale;
         return clone;
     }
 
-    private IEnumerator FlingMask(GameObject clone, Vector3 throwDir)
+    private IEnumerator FlingMask(GameObject clone, Vector3 throwDir, Vector3 upDir, float spinDegPerSec, float wobblePhase)
     {
-        Vector3 velocity = throwDir * maskFlingSpeed + Vector3.up * maskFlingUpward;
+        Vector3 up = upDir.sqrMagnitude > 0.0001f ? upDir.normalized : Vector3.up;
+        Vector3 velocity = throwDir * maskFlingSpeed + up * maskFlingUpward;
         float time = 0f;
+        Vector3 basePos = clone.transform.position;
+        Vector3 right = Vector3.Cross(up, throwDir);
+        if (right.sqrMagnitude < 0.0001f)
+            right = Vector3.Cross(Vector3.up, throwDir);
+        right = right.sqrMagnitude > 0.0001f ? right.normalized : Vector3.right;
 
         while (time < maskFlingDuration && clone != null)
         {
-            velocity += Vector3.down * maskFlingGravity * Time.deltaTime;
-            clone.transform.position += velocity * Time.deltaTime;
-            clone.transform.rotation = Quaternion.AngleAxis(maskFlingSpinDegPerSec * Time.deltaTime, Vector3.forward) * clone.transform.rotation;
+            velocity += -up * maskFlingGravity * Time.deltaTime;
+            basePos += velocity * Time.deltaTime;
+
+            float wobble = maskFlingWobbleAmplitude;
+            if (maskFlingWobbleDamping > 0f)
+                wobble *= Mathf.Exp(-maskFlingWobbleDamping * time);
+
+            float t = time * maskFlingWobbleFrequency + wobblePhase;
+            float t2 = time * (maskFlingWobbleFrequency * 1.37f) + wobblePhase * 0.7f;
+            Vector3 wobbleOffset = (Mathf.Sin(t) * right + Mathf.Cos(t2) * up) * wobble;
+
+            clone.transform.position = basePos + wobbleOffset;
+            clone.transform.rotation = Quaternion.AngleAxis(spinDegPerSec * Time.deltaTime, Vector3.forward) * clone.transform.rotation;
 
             time += Time.deltaTime;
             yield return null;
@@ -480,6 +586,28 @@ public class Hands : MonoBehaviour
 
         if (clone != null)
             Destroy(clone);
+    }
+
+    private Camera ResolveFlingCamera()
+    {
+        if (maskFlingCamera != null)
+            return maskFlingCamera;
+
+        return Camera.main;
+    }
+
+    private static Vector3 GetScreenOutwardDir(Camera cam, Vector3 screenPos)
+    {
+        if (cam == null)
+            return Vector3.zero;
+
+        Vector2 center = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+        Vector2 delta = new Vector2(screenPos.x, screenPos.y) - center;
+        if (delta.sqrMagnitude < 0.0001f)
+            return cam.transform.right;
+
+        Vector3 world = cam.transform.right * delta.x + cam.transform.up * delta.y;
+        return Vector3.ProjectOnPlane(world, cam.transform.forward);
     }
 
     private void UpdateLeftExternal()
