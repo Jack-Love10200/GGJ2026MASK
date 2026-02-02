@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
+    public AudioClip music;
 
     [Header("Settings")]
     public AudioMixer audioMixer;
@@ -14,6 +15,8 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            GetComponent<AudioSource>().clip = music;
+            GetComponent<AudioSource>().Play();
         }
         else
         {
