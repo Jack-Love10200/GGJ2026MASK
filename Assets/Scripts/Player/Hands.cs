@@ -359,6 +359,9 @@ public class Hands : MonoBehaviour
         if (visual.sprite == null)
             return;
 
+        if (leftImpulseActive || rightImpulseActive)
+            return;
+
         bool canUseLeft = leftHand != null && !leftExternalControl;
         bool canUseRight = rightHand != null && !rightExternalControl;
 
@@ -375,14 +378,10 @@ public class Hands : MonoBehaviour
 
         if (useLeft)
         {
-            if (leftRoutine != null)
-                StopCoroutine(leftRoutine);
             leftRoutine = StartCoroutine(GrabAndThrow(leftHand, visual, enemyTransform, true));
         }
         else
         {
-            if (rightRoutine != null)
-                StopCoroutine(rightRoutine);
             rightRoutine = StartCoroutine(GrabAndThrow(rightHand, visual, enemyTransform, false));
         }
     }
