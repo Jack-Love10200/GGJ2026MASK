@@ -8,6 +8,11 @@ public class AudioManager : MonoBehaviour
 
     [Header("Settings")]
     public AudioMixer audioMixer;
+    [Header("Mixer Groups")]
+    public AudioMixerGroup sfxMixerGroup;
+    [Header("Sources")]
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioSource sfxSource;
 
     void Awake()
     {
@@ -15,8 +20,12 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            GetComponent<AudioSource>().clip = music;
-            GetComponent<AudioSource>().Play();
+            EnsureSources();
+            if (musicSource != null && music != null)
+            {
+                musicSource.clip = music;
+                musicSource.Play();
+            }
         }
         else
         {
@@ -47,5 +56,38 @@ public class AudioManager : MonoBehaviour
 
         float dbValue = (sliderValue <= 0.0001f) ? -80f : Mathf.Log10(sliderValue) * 20f;
         audioMixer.SetFloat(parameterName, dbValue);
+    }
+
+    public void PlaySfx(AudioClip clip, float volume = 1f)
+    {
+        if (clip == null)
+            return;
+
+        EnsureSources();
+        if (sfxSource == null)
+            return;
+
+        if (sfxMixerGroup != null && sfxSource.outputAudioMixerGroup != sfxMixerGroup)
+            sfxSource.outputAudioMixerGroup = sfxMixerGroup;
+
+        sfxSource.PlayOneShot(clip, volume);
+    }
+
+    private void EnsureSources()
+    {
+        if (musicSource == null)
+            musicSource = GetComponent<AudioSource>();
+
+        if (musicSource == null)
+            musicSource = gameObject.AddComponent<AudioSource>();
+
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+            sfxSource.playOnAwake = false;
+        }
+
+        if (sfxMixerGroup != null && sfxSource.outputAudioMixerGroup != sfxMixerGroup)
+            sfxSource.outputAudioMixerGroup = sfxMixerGroup;
     }
 }
