@@ -725,7 +725,12 @@ public class Hands : MonoBehaviour
         };
 
         if (sprite != null)
+      { 
+        renderer.material.SetTexture("_MainTex", sprite.texture);
+        renderer.material.SetTexture("_PersonTex", sprite.texture);
+        renderer.material.SetTexture("_ShirtTex", sprite.texture);
             renderer.sprite = sprite;
+      }
     }
 
     private void SetReturnTargets(bool isLeft)
