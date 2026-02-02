@@ -21,13 +21,13 @@ MonoBehaviour:
   - LooksMasking
   - Maskter
   mComboLevelThresholds:
+  - 2
+  - 5
   - 10
-  - 100
-  - 300
-  - 500
-  - 1000
-  - 2000
-  - 5000
+  - 20
+  - 30
+  - 50
+  - 60
   mComboLevelSprites:
   - {fileID: -946093122, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}
   - {fileID: -1042467680, guid: 079338aa7d8f3ec4fba2d5af685c5f6d, type: 3}

@@ -327,6 +327,8 @@ public class EnemyMaskStackVisual : MonoBehaviour
             layerIndex = index
         });
 
+        root.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
         return true;
     }
 
