@@ -92,6 +92,11 @@ MonoBehaviour:
   debugDrawRayLength: 5
   debugDrawPlaneSize: 0.5
   debugDrawPointRadius: 0.03
+  playResultSfx: 1
+  resultSfxSource: {fileID: 0}
+  winResultSfx: {fileID: 8300000, guid: a38148be1d6d85b4a88a865dc5125900, type: 3}
+  loseResultSfx: {fileID: 8300000, guid: 67467736e6d8850458808bc58ac6c841, type: 3}
+  drawResultSfx: {fileID: 8300000, guid: 67467736e6d8850458808bc58ac6c841, type: 3}
 --- !u!114 &3253775028147290473
 MonoBehaviour:
   m_ObjectHideFlags: 0

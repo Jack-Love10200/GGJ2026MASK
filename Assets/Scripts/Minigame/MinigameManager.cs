@@ -2,6 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+public enum MinigameResult
+{
+    Win,
+    Lose,
+    Draw
+}
+
 public class MinigameManager : MonoBehaviour
 {
     [System.Serializable]
@@ -31,6 +38,13 @@ public class MinigameManager : MonoBehaviour
     [SerializeField] private float debugDrawRayLength = 5f;
     [SerializeField] private float debugDrawPlaneSize = 0.5f;
     [SerializeField] private float debugDrawPointRadius = 0.03f;
+
+    [Header("SFX")]
+    [SerializeField] private bool playResultSfx = true;
+    [SerializeField] private AudioSource resultSfxSource;
+    [SerializeField] private AudioClip winResultSfx;
+    [SerializeField] private AudioClip loseResultSfx;
+    [SerializeField] private AudioClip drawResultSfx;
 
     public static MinigameManager Instance { get; private set; }
 
@@ -143,8 +157,18 @@ public class MinigameManager : MonoBehaviour
 
     public void EndMinigame(bool success)
     {
+        EndMinigame(success ? MinigameResult.Win : MinigameResult.Lose);
+    }
+
+    public void EndMinigame(MinigameResult result)
+    {
         if (activeMinigame == null)
             return;
+
+        bool success = result == MinigameResult.Win;
+
+        if (playResultSfx)
+            PlayResultSfx(result);
 
         if (!success && activeContext != null && activeContext.player != null && activeContext.enemy != null)
             activeContext.player.BlockMinigameUntilExit(activeContext.enemy);
@@ -155,6 +179,27 @@ public class MinigameManager : MonoBehaviour
             activeContext?.onFail?.Invoke();
 
         CleanupActive();
+    }
+
+    private void PlayResultSfx(MinigameResult result)
+    {
+        AudioClip clip = result switch
+        {
+            MinigameResult.Win => winResultSfx,
+            MinigameResult.Draw => drawResultSfx,
+            _ => loseResultSfx
+        };
+
+        if (clip == null)
+            return;
+
+        if (resultSfxSource == null)
+            resultSfxSource = GetComponent<AudioSource>();
+
+        if (resultSfxSource == null)
+            return;
+
+        resultSfxSource.PlayOneShot(clip);
     }
 
     public void CancelActive()
