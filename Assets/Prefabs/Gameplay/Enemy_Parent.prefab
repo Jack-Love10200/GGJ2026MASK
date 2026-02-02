@@ -242,7 +242,7 @@ MonoBehaviour:
   bodyRenderer: {fileID: 6746849366139338875}
   indicatorSocket: {fileID: 2201326421344575973}
   leftShoulderSocket: {fileID: 0}
-  MaskPrefab: {fileID: 7538995638461305951, guid: 8fb2df23266120749ac84692838e9f64, type: 3}
+  MaskPrefab: {fileID: 0}
   arrowMaterial: {fileID: 2100000, guid: f9e5dd49530997b41bdda41e3aa2cd3c, type: 2}
   initialMasksBottomToTop:
   - {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
@@ -250,6 +250,9 @@ MonoBehaviour:
   baseSortingOrder: 5
   sortingLayerName: 
   indicatorSortingOffset: 10
+  playPopSfx: 1
+  popSfxSource: {fileID: 0}
+  fallbackPlayClipAtPoint: 1
   positionJitter: {x: 0.03, y: 0.03}
   rotationJitterDeg: 2
   scaleJitter: 0.03

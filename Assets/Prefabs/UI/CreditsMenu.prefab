@@ -221,7 +221,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Programmers\r\n- Riley Durbin\r\n- Doyoon Kim\r\n- Jack Love\r\n- Travis
     Gronvold\r\n\r\nArtists: \r\n- Paww Y.\r\n- Brenna Kilty\r\n- Yuli Dai\r\n\r\nDesigners:
-    \r\n-Jared Callupe Lopez\r\n- Taylor Cadwallader\r\n\r\nSound:\r\n- Aviral Gusain"
+    \r\n-Jared Callupe Lopez\r\n- Taylor Cadwallader\r\n\r\nMusic:\r\n- Aviral Gusain"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3fd9715bf9f758b45b91e29ce79bd411, type: 2}
   m_sharedMaterial: {fileID: 4372925910204308160, guid: 3fd9715bf9f758b45b91e29ce79bd411, type: 2}

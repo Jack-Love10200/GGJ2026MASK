@@ -41,7 +41,7 @@ public class EnemyMaskStackVisual : MonoBehaviour
     private NavMeshAgent cachedAgent;
     private SpriteRenderer indicatorRenderer;
 
-    static bool useNonPrefabIndicator = false;
+    static bool useNonPrefabIndicator = true;
 
     private struct MaskLayer
     {
@@ -280,22 +280,44 @@ public class EnemyMaskStackVisual : MonoBehaviour
             return false;
         }
 
-
-        var root = GameObject.Instantiate(MaskPrefab);
-        root.name = $"MaskLayer_{index}";
+        // using original sprite renderer
+        var root = new GameObject($"MaskLayer_{index}");
         root.transform.SetParent(faceSocket, false);
 
-        SpriteRenderer spriteRenderer = root.GetComponent<SpriteRenderer>();
+        var spriteRenderer = root.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = def.maskSprite;
 
-        GameObject arrow = new GameObject("Arrow");
-        arrow.transform.SetParent(root.transform);
-        arrow.transform.localPosition = new Vector3(0, 0, 0.1f);
+        if (bodyRenderer != null)
+        {
+            spriteRenderer.sortingLayerID = bodyRenderer.sortingLayerID;
+        }
+        else if (!string.IsNullOrWhiteSpace(sortingLayerName))
+        {
+            spriteRenderer.sortingLayerName = sortingLayerName;
+        }
 
-        SpriteRenderer arrowRenderer = arrow.AddComponent<SpriteRenderer>();
-        arrowRenderer.sprite = def.indicatorSprite;
-        arrowRenderer.material = arrowMaterial;
+        // End original sprite renderer mask
 
-        arrowRenderer.sortingOrder = spriteRenderer.sortingOrder + 1;
+        // Using Jack's mask prefab
+
+        //var root = GameObject.Instantiate(MaskPrefab);
+        //root.name = $"MaskLayer_{index}";
+        //root.transform.SetParent(faceSocket, false);
+
+        //SpriteRenderer spriteRenderer = root.GetComponent<SpriteRenderer>();
+
+        //GameObject arrow = new GameObject("Arrow");
+        //arrow.transform.SetParent(root.transform);
+        //arrow.transform.localPosition = new Vector3(0, 0, 0.1f);
+
+        //SpriteRenderer arrowRenderer = arrow.AddComponent<SpriteRenderer>();
+        //arrowRenderer.sprite = def.indicatorSprite;
+        //arrowRenderer.material = arrowMaterial;
+
+        //arrowRenderer.sortingOrder = spriteRenderer.sortingOrder + 1;
+
+
+        // End Jack's mask prefab code
 
         //if (bodyRenderer != null)
         //{
@@ -402,10 +424,10 @@ public class EnemyMaskStackVisual : MonoBehaviour
             if (layer.root == null)
                 continue;
 
-            //if (Application.isPlaying)
-            //    Destroy(layer.root);
-            //else
-            //    DestroyImmediate(layer.root);
+            if (Application.isPlaying)
+                Destroy(layer.root);
+            else
+                DestroyImmediate(layer.root);
         }
 
         layers.Clear();

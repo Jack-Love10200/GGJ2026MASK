@@ -12,3 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 756b590fee6102445ade5dbabb9ad6f5, type: 3}
   m_Name: EnemySpawningSettings
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawningSettings
+  SpecialEnemyTypes:
+  - EnemyClass: 1
+    initialMasksBottomToTop:
+    - {fileID: 11400000, guid: 2bd402e72a799a54abec83da61498107, type: 2}
+    desiredNumberMin: 10
+    desiredNumberMax: 15
+  - EnemyClass: 1
+    initialMasksBottomToTop:
+    - {fileID: 11400000, guid: 5e1b9a8cc7bcc3142ab30c4242f31fdf, type: 2}
+    desiredNumberMin: 10
+    desiredNumberMax: 15
