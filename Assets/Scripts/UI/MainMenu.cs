@@ -32,6 +32,7 @@ public class MainMenu : MonoBehaviour
     public void PlayButton()
     {
         SceneManager.LoadScene("Level");
+        PersistentScopeManagers.Instance.GetComponent<GameStateManager>().CurrentState = GameState.Playing;
     }
     
     public void OptionsButton()
