@@ -17,6 +17,8 @@ public class GameTimer : MonoBehaviour
 
     bool gameOverHandled = false;
 
+    bool isShowingAndTickingTimer = true;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void TimerStart()
     {
@@ -45,27 +47,42 @@ public class GameTimer : MonoBehaviour
 
         timerLabel.SetText(GetCurrentTime());
 
-        currentTime -= Time.deltaTime;
 
-        if (currentTime <= 0.0 && gameOverHandled == false)
+        if (isShowingAndTickingTimer)
         {
-            // end game
-            GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
-            Instantiate(loseScreenPrefab, canvas.transform);
-            currentTime = 0.0;
-            gameStateManager.CurrentState = GameState.GameOver;
+            currentTime -= Time.deltaTime;
 
-            gameOverHandled = true;
+            if (currentTime <= 0.0 && gameOverHandled == false)
+            {
+                // end game
+                GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
+                Instantiate(loseScreenPrefab, canvas.transform);
+                currentTime = 0.0;
+                gameStateManager.CurrentState = GameState.GameOver;
+
+                gameOverHandled = true;
+            }
         }
-
+       
+        // Update whether it should be paused
         if (Time.timeScale != 0)
         {
-            timerLabel.gameObject.SetActive(true);
-            timerLabel.text = GetCurrentTime();
+
+            //timerLabel.gameObject.SetActive(true);
+            timerLabel.SetText(GetCurrentTime());
+
+            // Turn timer back to ticking and showing, now that we're unpaused
+            isShowingAndTickingTimer = true;
         }
         else
         {
-            timerLabel.gameObject.SetActive(false);
+            //timerLabel.gameObject.SetActive(false);
+
+
+            timerLabel.SetText("");
+
+            // Set to not tick the timer, but keep object active so it can turn itself back on
+            isShowingAndTickingTimer = false;
         }
     }
 }
