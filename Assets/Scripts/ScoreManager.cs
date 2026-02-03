@@ -43,6 +43,9 @@ public class ScoreManager : MonoBehaviour
         Canvas canvasObj = FindFirstObjectByType<Canvas>();
         Instantiate(winScreenPrefab, canvasObj.transform);
 
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
     }
 
 }

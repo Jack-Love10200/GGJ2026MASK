@@ -69,7 +69,7 @@ public class PauseManager : MonoBehaviour
 
         //Hide cursor
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.visible = true;
 
         //Play close animation
         currentPauseMenu.GetComponent<Animator>().SetTrigger("Close");

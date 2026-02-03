@@ -40,7 +40,7 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         pauseManager = FindAnyObjectByType<PauseManager>();
-        gameTimer = FindAnyObjectByType<GameTimer>();
+        gameTimer = FindFirstObjectByType<GameTimer>();
 
         resumeButton.onClick.AddListener(ResumeButton);
         optionsButton.onClick.AddListener(OptionsButton);

@@ -41607,6 +41607,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 6f773311612994bf99463354bb807683, type: 2}
+    - target: {fileID: 230046064678712886, guid: e340baa2b231ed349bd3ddcaba0b41ba, type: 3}
+      propertyPath: Shelves.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 233748541835580477, guid: e340baa2b231ed349bd3ddcaba0b41ba, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -44383,6 +44387,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 6f773311612994bf99463354bb807683, type: 2}
+    - target: {fileID: 6890199814697583299, guid: e340baa2b231ed349bd3ddcaba0b41ba, type: 3}
+      propertyPath: Shelves.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6926123575812194398, guid: e340baa2b231ed349bd3ddcaba0b41ba, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647

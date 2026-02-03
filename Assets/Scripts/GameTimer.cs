@@ -58,12 +58,16 @@ public class GameTimer : MonoBehaviour
                 GameObject canvas = FindAnyObjectByType<Canvas>().gameObject;
                 Instantiate(loseScreenPrefab, canvas.transform);
                 currentTime = 0.0;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
                 gameStateManager.CurrentState = GameState.GameOver;
 
                 gameOverHandled = true;
             }
         }
-       
+
         // Update whether it should be paused
         if (Time.timeScale != 0)
         {
