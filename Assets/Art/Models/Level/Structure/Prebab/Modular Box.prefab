@@ -51535,6 +51535,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -51923,6 +51931,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -51985,6 +52001,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -52373,6 +52397,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -52761,6 +52793,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -53987,6 +54027,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -54717,6 +54765,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 343139c0444ab3246bfa78858e3fa4b2, type: 2}
+    - target: {fileID: 8640043734290111059, guid: cb743c5fb966d264a920a65af7e00776, type: 3}
+      propertyPath: 'initialMasksBottomToTop.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f3623402a53435444a208d5d2957ed1e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
